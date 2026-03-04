@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Engineering Foundations + Mini-Deck</title>
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    :root{
+      --bg: #0b1020;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.58);
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+
+      --a: #7c3aed;  /* violet */
+      --b: #22c55e;  /* green */
+      --c: #06b6d4;  /* cyan */
+      --d: #f97316;  /* orange */
+      --e: #e11d48;  /* rose */
+      --f: #facc15;  /* amber */
+
+      --sidebarW: 330px;
+      --sidebarCollapsedW: 76px;
+
+      /* Normal mode sizing */
+      --maxW: 1440px;
+      --slidePad: 32px;
+      --minSlideH: 640px;
+
+      --h2: clamp(24px, 2.2vw + 12px, 40px);
+      --sub: clamp(15px, .55vw + 12px, 18px);
+      --cardTitle: 14.5px;
+      --cardBody: 13.5px;
+      --list: 14px;
+      --kv: 14px;
+    }
+
+    /* Presenter mode: bigger + wider + cleaner */
+    body.presenter{
+      --maxW: 1720px;
+      --slidePad: 44px;
+      --minSlideH: 740px;
+
+      --h2: clamp(30px, 2.7vw + 14px, 52px);
+      --sub: clamp(17px, .8vw + 12px, 22px);
+      --cardTitle: 16px;
+      --cardBody: 15px;
+      --list: 16px;
+      --kv: 16px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root{
+        --bg: #f6f7fb;
+        --panel: rgba(255,255,255,.9);
+        --stroke: rgba(10,15,30,.10);
+        --text: rgba(10,15,30,.92);
+        --muted: rgba(10,15,30,.70);
+        --muted2: rgba(10,15,30,.55);
+        --shadow: 0 18px 50px rgba(10,15,30,.10);
+      }
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(124,58,237,.26), transparent 60%),
+        radial-gradient(1100px 700px at 90% 20%, rgba(6,182,212,.18), transparent 58%),
+        radial-gradient(900px 600px at 70% 95%, rgba(34,197,94,.16), transparent 55%),
+        radial-gradient(800px 500px at 10% 85%, rgba(249,115,22,.12), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* Layout */
+    .app{
+      height:100%;
+      display:grid;
+      grid-template-columns: var(--sidebarW) 1fr;
+      transition: grid-template-columns .18s ease;
+    }
+    body.sidebar-collapsed .app{ grid-template-columns: var(--sidebarCollapsedW) 1fr; }
+    body.presenter .app{ grid-template-columns: 1fr; } /* presenter hides sidebar */
+
+    /* Sidebar */
+    .sidebar{
+      border-right: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      backdrop-filter: blur(14px);
+      padding: 20px 18px;
+      overflow:auto;
+      transition: padding .18s ease;
+    }
+    body.sidebar-collapsed .sidebar{ padding: 16px 10px; }
+    body.presenter .sidebar{ display:none; }
+
+    .brand{
+      display:flex; gap:12px; align-items:center;
+      padding: 6px 6px 14px;
+      border-bottom: 1px solid var(--stroke);
+      margin-bottom: 14px;
+      justify-content:space-between;
+    }
+    .brandLeft{
+      display:flex; gap:12px; align-items:center;
+      min-width:0; flex:1;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0)),
+                  linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.85));
+      box-shadow: 0 10px 25px rgba(0,0,0,.18);
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.22);
+      flex: 0 0 auto;
+    }
+    .brandText{ min-width:0; }
+    .brand h1{ font-size: 14px; margin:0; line-height:1.2; letter-spacing:.2px; }
+    .brand p{ margin:2px 0 0; font-size: 12px; color: var(--muted); }
+
+    .collapseBtn{
+      all:unset; cursor:pointer;
+      width:34px;height:34px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .collapseBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+
+    .nav{ display:flex; flex-direction:column; gap:10px; padding-bottom: 18px; }
+    .nav button{
+      all:unset; cursor:pointer;
+      display:flex; gap:12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      align-items:flex-start;
+    }
+    .nav button:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.10);
+      transform: translateY(-1px);
+    }
+    .nav button[aria-current="true"]{
+      background: linear-gradient(135deg, rgba(124,58,237,.20), rgba(6,182,212,.14));
+      border-color: rgba(124,58,237,.35);
+      box-shadow: 0 14px 32px rgba(124,58,237,.10);
+    }
+    .nav .k{
+      width:28px;height:28px;border-radius:10px;
+      display:grid;place-items:center;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      flex: 0 0 auto;
+      margin-top:1px;
+    }
+    .nav .t{ display:flex;flex-direction:column;gap:2px; min-width:0; }
+    .nav .t .title{ font-size:13px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis; }
+    .nav .t .sub{
+      font-size:12px;color:var(--muted2);
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    body.sidebar-collapsed .brandText{ display:none; }
+    body.sidebar-collapsed .nav .t{ display:none; }
+    body.sidebar-collapsed .sidebar .hint{ display:none; }
+    body.sidebar-collapsed .nav button{ justify-content:center; padding: 10px; }
+
+    .sidebar .hint{
+      border-top: 1px solid var(--stroke);
+      padding-top: 12px;
+      font-size: 12px;
+      color: var(--muted2);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .chip{
+      padding: 6px 8px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Main */
+    .main{
+      overflow:auto;
+      padding: 26px 22px;
+      display:flex;
+      justify-content:center;
+    }
+    body.presenter .main{ padding: 26px 18px; }
+
+    .deck{ width: min(100%, var(--maxW)); display:flex; gap:0; }
+
+    /* Slide */
+    .slide{
+      width:100%;
+      border-radius: calc(var(--radius) + 6px);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: var(--slidePad);
+      position:relative;
+      overflow:hidden;
+      min-height: var(--minSlideH);
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+      animation: fadeIn .18s ease both;
+    }
+    @keyframes fadeIn{ from{opacity:.65; transform: translateY(6px)} to{opacity:1; transform: translateY(0)} }
+
+    .slide::before{
+      content:"";
+      position:absolute; inset:-140px -140px auto auto;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,.22), transparent 55%),
+                  radial-gradient(circle at 60% 60%, rgba(6,182,212,.18), transparent 52%),
+                  radial-gradient(circle at 40% 80%, rgba(34,197,94,.12), transparent 58%);
+      opacity:.9; pointer-events:none;
+      transform: rotate(12deg);
+    }
+
+    .header{
+      display:flex; gap: 16px;
+      align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap;
+      z-index:1;
+    }
+    .header .titles{ min-width: min(760px, 100%); max-width: 100%; }
+    .header h2{
+      margin:0;
+      font-size: var(--h2);
+      letter-spacing: -.35px;
+      line-height: 1.10;
+    }
+    .header p{
+      margin: 10px 0 0;
+      font-size: var(--sub);
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 86ch;
+    }
+
+    .badgeRow{ display:flex; gap: 8px; flex-wrap:wrap; align-items:center; z-index:1; }
+    .badge{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: var(--muted);
+      display:flex; align-items:center; gap:8px;
+    }
+    .dot{ width:10px;height:10px;border-radius:50%; box-shadow:none; }
+
+    .content{
+      display:grid;
+      grid-template-columns: 1.18fr .92fr;
+      gap: 16px;
+      align-items:start;
+      z-index:1;
+      flex:1;
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      padding: 16px;
+    }
+
+    .rightStack{ display:grid; gap: 12px; }
+
+    .callout{
+      border-radius: var(--radius);
+      border: 1px solid rgba(34,197,94,.25);
+      background: linear-gradient(135deg, rgba(34,197,94,.14), rgba(6,182,212,.08));
+      padding: 16px;
+    }
+    .callout h3{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
+    .list{
+      margin:0; padding-left: 18px;
+      color: var(--muted);
+      font-size: var(--list);
+      line-height: 1.65;
+    }
+
+    .kv{ display:grid; gap: 10px; }
+    .kv .row{
+      display:flex; justify-content:space-between; gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      font-size: var(--kv);
+    }
+    .kv .row .k{ color: var(--muted) }
+    .kv .row .v{ color: var(--text); font-weight: 650; }
+
+    /* Left: stack cards */
+    .stackCard{
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .stackCard::after{
+      content:"";
+      position:absolute; inset:auto -40px -60px auto;
+      width:220px; height:220px;
+      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,.18), transparent 60%);
+      transform: rotate(10deg);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .icon{
+      width:36px;height:36px;border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--stroke);
+      display:grid;place-items:center;
+      flex: 0 0 auto;
+    }
+    .stackCard h4{ margin:0; font-size: var(--cardTitle); letter-spacing:.15px; }
+    .stackCard p{ margin: 6px 0 0; font-size: var(--cardBody); color: var(--muted); line-height: 1.5; }
+
+    /* Left: cards grid (2-up) */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card{
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.055);
+      padding: 14px;
+      min-height: 112px;
+      display:flex; gap: 10px;
+      align-items:flex-start;
+    }
+    .card h4{ margin:0; font-size: var(--cardTitle); letter-spacing:.15px; }
+    .card p{ margin: 6px 0 0; font-size: var(--cardBody); color: var(--muted); line-height: 1.5; }
+
+    /* Left: diagram layers */
+    .layerBox{
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      display:flex; gap: 10px;
+      align-items:flex-start;
+      position:relative;
+      overflow:hidden;
+    }
+    .layerBox .name{ font-weight:900; letter-spacing:.2px; }
+    .layerBox .desc{ color: var(--muted); font-size: var(--cardBody); margin-top:4px; line-height:1.5; }
+
+    /* Left: TIMWOODS grid */
+    .grid2{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .gridItem{
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .gridItem .k{ font-weight:900; font-size: var(--cardBody); }
+    .gridItem .v{ color: var(--muted); font-size: calc(var(--cardBody) - 0.5px); margin-top:3px; line-height:1.4; }
+
+    /* Divider slide */
+    .divider{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:left;
+    }
+    .dividerInner{
+      width:min(100%, 960px);
+      border-radius: calc(var(--radius) + 10px);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(135deg, rgba(124,58,237,.18), rgba(6,182,212,.10));
+      box-shadow: var(--shadow);
+      padding: calc(var(--slidePad) + 10px);
+      position:relative;
+      overflow:hidden;
+    }
+    .dividerInner::before{
+      content:"";
+      position:absolute;
+      inset:-160px -220px auto auto;
+      width:520px; height:520px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 60%);
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .dividerTitle{
+      font-size: clamp(30px, 3.4vw + 12px, 64px);
+      font-weight: 900;
+      letter-spacing: -.6px;
+      line-height: 1.05;
+      margin:0;
+    }
+    .dividerSub{
+      margin: 14px 0 0;
+      font-size: var(--sub);
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+    .dividerChips{
+      margin-top: 18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .dividerChip{
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .dividerChip .dot{ width:10px;height:10px;border-radius:50%; }
+
+    .footerNote{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted2);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      z-index:1;
+    }
+    body.presenter .footerNote{ display:none; }
+
+    /* Presenter floating controls */
+    .presenterBar{
+      position: fixed;
+      right: 16px;
+      top: 16px;
+      z-index: 1000;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .pbtn{
+      cursor:pointer;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      padding: 10px 12px;
+      color: var(--text);
+      display:flex; align-items:center; gap:8px;
+      box-shadow: var(--shadow);
+      user-select:none;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .pbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.12); }
+    .pbtn.secondary{ background: rgba(255,255,255,.06); color: var(--muted); }
+    .pbtn small{ color: var(--muted2); font-weight: 650; }
+
+    /* Mobile drawer */
+    .hamburger{ display:none; }
+    .overlay{ display:none; }
+
+    @media (max-width: 900px){
+      body{ overflow:auto; }
+      .app{ grid-template-columns: 1fr; }
+      body.presenter .sidebar{ display:block; } /* presenter on mobile uses drawer */
+      body.presenter .app{ grid-template-columns: 1fr; }
+
+      .sidebar{
+        position: fixed;
+        top:0; left:0; bottom:0;
+        width: min(92vw, var(--sidebarW));
+        transform: translateX(-105%);
+        transition: transform .18s ease;
+        z-index: 50;
+      }
+      .sidebar.open{ transform: translateX(0); }
+
+      .overlay{
+        display:block;
+        position: fixed; inset:0;
+        background: rgba(0,0,0,.45);
+        z-index: 40;
+        opacity: 0;
+        pointer-events:none;
+        transition: opacity .18s ease;
+      }
+      .overlay.show{ opacity: 1; pointer-events:auto; }
+
+      .main{ padding: 16px 14px; }
+      .content{ grid-template-columns: 1fr; }
+      .cards{ grid-template-columns: 1fr; }
+      .grid2{ grid-template-columns: 1fr; }
+      .slide{ min-height: 820px; padding: 20px; }
+
+      .hamburger{
+        display:inline-flex;
+        position: fixed;
+        left: 14px;
+        top: 14px;
+        z-index: 60;
+        cursor:pointer;
+        border-radius: 14px;
+        border: 1px solid var(--stroke);
+        background: rgba(255,255,255,.08);
+        backdrop-filter: blur(10px);
+        padding: 10px 12px;
+        color: var(--text);
+        box-shadow: var(--shadow);
+        gap:8px;
+        align-items:center;
+      }
+
+      /* disable collapsed mode on mobile */
+      body.sidebar-collapsed .brandText{ display:block; }
+      body.sidebar-collapsed .nav .t{ display:flex; }
+      body.sidebar-collapsed .sidebar .hint{ display:flex; }
+
+      .presenterBar{ right: 12px; top: 12px; }
+    }
+
+    :focus-visible{
+      outline: 3px solid rgba(124,58,237,.55);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <button class="hamburger" id="hamburger" aria-label="Open navigation">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    Menu
+  </button>
+
+  <div class="presenterBar" aria-label="Presenter controls">
+    <button class="pbtn secondary" id="prevBtn" title="Previous (← / K)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Prev
+    </button>
+    <button class="pbtn secondary" id="nextBtn" title="Next (→ / J)">
+      Next
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="pbtn" id="presenterToggle" title="Toggle Presenter Mode (P)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Presenter
+      <small id="presenterState">OFF</small>
+    </button>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Slide navigation">
+      <div class="brand">
+        <div class="brandLeft">
+          <div class="logo" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l1.7 6.2L20 10l-6.3 1.8L12 18l-1.7-6.2L4 10l6.3-1.8L12 2z"
+                stroke="rgba(255,255,255,.95)" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="brandText">
+            <h1>Engineering Deck</h1>
+            <p>Foundations → Plan</p>
+          </div>
+        </div>
+
+        <button class="collapseBtn" id="collapseBtn" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="nav" id="nav"></nav>
+
+      <div class="hint">
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <span class="chip">← →</span>
+          <span class="chip">J / K</span>
+          <span class="chip">P</span>
+          <span class="chip">Ctrl/Cmd+B</span>
+        </div>
+        <span class="chip" id="progressChip">1 / N</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="deck">
+        <section class="slide" id="slide" aria-live="polite"></section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // Config: section dividers on/off (easy toggle)
+    // ============================================================
+    const SHOW_DIVIDERS = false;
+
+    // ============================================================
+    // Slide data (Foundations first, then Mini-deck, Appendix last)
+    // ============================================================
+    const ALL_SLIDES = [
+      // ---------------- Foundations ----------------
+      {
+        id: "leading-change",
+        title: "Leading Engineering through Change with Stability",
+        subtitle: "A Lean, measurable system of work that enables reliable delivery at pace — without adding ceremony",
+        badges: [
+          { label: "Trust + predictability", color: "var(--b)" },
+          { label: "Lean system of work", color: "var(--c)" },
+          { label: "Trade-off clarity", color: "var(--a)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "What this is (and how it works)",
+          items: [
+            { tone: "var(--b)", icon: iconTarget(), title: "Purpose & Outcomes", text: "A lightweight set of foundations and principles that guide delivery decisions and trade-offs to yield: Reliable delivery • Operational stability • Consistent engineering quality • Modernisation progress." },
+            { tone: "var(--a)", icon: iconStar(), title: "North Stars (decision scaffolding)", text: "Durable commitments that guide decisions when priorities clash (outcomes, reliability, security, quality, ownership)." },
+            { tone: "var(--a)", icon: iconSettings(), title: "Operating Principles", text: "Lean mechanics: flow, pull/WIP, visibility, safety rails, paved road, go-see, kaizen." },
+            { tone: "var(--a)", icon: iconBan(), title: "TIMWOODS (the STOP list)", text: "The wastes we actively remove to cut delay, rework, risk and cost." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "Why it matters", bullets: [
+            "More predictable delivery with fewer surprises",
+            "Lower operational risk through safe, measurable change",
+            "Reduced rework by eliminating waste and building quality in",
+            "Visible progress on modernising the estate"
+          ]},
+          { type: "kv", title: "Governance (lightweight)", rows: [
+            { k: "Cadence", v: "Quarterly review (QBR-style)" },
+            { k: "Evidence", v: "Small scorecard, trend-based" },
+            { k: "Decision focus", v: "Trade-offs + constraints + risks" },
+            { k: "Outcome", v: "Correct course, not add ceremony" }
+          ]}
+        ],
+        foot: "Talking point: stability and transformation become compatible — not competing goals."
+      },
+
+      {
+        id: "northstars",
+        title: "Engineering North Stars (7)",
+        subtitle: "Trade-off setters — durable commitments that guide decisions",
+        badges: [
+          { label: "Direction", color: "var(--a)" },
+          { label: "Trust + safety", color: "var(--b)" },
+          { label: "Ownership", color: "var(--e)" },
+        ],
+        left: {
+          type: "cards",
+          headline: "The 7 North Stars",
+          cards: [
+            { icon: iconTrend(), title: "Outcomes over Output", text: "Measure success by customer/business impact, not activity." },
+            { icon: iconActivity(), title: "Reliability is a Feature", text: "SLOs & error budgets guide stabilise-first decisions." },
+            { icon: iconLock(), title: "Secure by Design", text: "Shift-left security with automated controls and least privilege." },
+            { icon: iconCheck(), title: "Quality is Built In", text: "Prevent defects through strong DoD, testing and operability." },
+            { icon: iconLayers(), title: "Evolutionary Architecture", text: "Design for change; modernise continuously with seams & ADRs." },
+            { icon: iconUsers(), title: "Psychological Safety", text: "Blameless learning and sustainable pace enable performance." },
+            { icon: iconFlag(), title: "Clear Ownership & Accountability", text: "Named owners; teams empowered end-to-end (build & run)." },
+          ]
+        },
+        right: {
+          type: "callout",
+          title: "Quarterly signals (small set)",
+          bullets: [
+            "OKR progress + 1–2 journey metrics",
+            "SLO attainment + error budget burn",
+            "Change failure rate + MTTR",
+            "Lead time for changes",
+            "Vulnerability remediation SLA adherence",
+            "Paved road adoption",
+            "% services with named owner + runbook"
+          ]
+        },
+        foot: "Simple decision rule: out of error budget → stabilise before adding new change."
+      },
+
+      {
+        id: "operating",
+        title: "Operating Principles (Lean System of Work)",
+        subtitle: "How we increase flow, reduce waste, and deliver safely",
+        badges: [
+          { label: "Flow", color: "var(--c)" },
+          { label: "Pull/WIP", color: "var(--f)" },
+          { label: "Safety rails", color: "var(--b)" },
+        ],
+        left: {
+          type: "cards",
+          headline: "How we work day-to-day",
+          cards: [
+            { icon: iconShuffle(), title: "Build for Flow", text: "Small batches, fewer handoffs, fast feedback loops." },
+            { icon: iconInbox(), title: "Pull, Not Push (WIP)", text: "Capacity-based intake; stop starting, start finishing." },
+            { icon: iconEye(), title: "Make Work Visible", text: "Expose queues/constraints; swarm bottlenecks." },
+            { icon: iconShield(), title: "Safety Rails by Default", text: "Automated tests + security controls + progressive delivery." },
+            { icon: iconRoad(), title: "The Paved Road", text: "Self-service golden paths: easiest way is safe/compliant." },
+            { icon: iconMapPin(), title: "Go See the Work", text: "Ground decisions in real journeys, ops signals, and data." },
+            { icon: iconRefresh(), title: "Kaizen", text: "Retros with follow-through; reduce toil; grow skills." },
+          ]
+        },
+        right: {
+          type: "kv",
+          title: "What improves",
+          rows: [
+            { k: "Batch size", v: "Down" },
+            { k: "Queues / waiting", v: "Down" },
+            { k: "Rework / defects", v: "Down" },
+            { k: "Predictability", v: "Up" },
+            { k: "Time to learn", v: "Down" }
+          ]
+        },
+        foot: "This layer maps directly to TIMWOODS: it’s the countermeasure set."
+      },
+
+      {
+        id: "timwoods",
+        title: "TIMWOODS: What We Stop Doing",
+        subtitle: "Anti-patterns that create delay, rework, risk and cost",
+        badges: [
+          { label: "STOP list", color: "var(--d)" },
+          { label: "Waste removal", color: "var(--b)" },
+          { label: "Leadership asks", color: "var(--e)" },
+        ],
+        left: {
+          type: "grid",
+          headline: "8 wastes (software examples)",
+          items: [
+            { k: "T — Transportation", v: "Ticket ping-pong, unclear boundaries, handoffs", icon: iconRepeat() },
+            { k: "I — Inventory", v: "Too much WIP, over-committed backlog", icon: iconLayers() },
+            { k: "M — Motion", v: "Tool friction, manual steps, context switching", icon: iconTool() },
+            { k: "W — Waiting", v: "Approval queues, review delays, env waits", icon: iconClock() },
+            { k: "O — Overproduction", v: "Building more than needed, speculative scope", icon: iconBox() },
+            { k: "O — Overprocessing", v: "Heavy ceremony, gold-plating, duplicate docs", icon: iconScissors() },
+            { k: "D — Defects", v: "Rework, regressions, recurring incidents", icon: iconBug() },
+            { k: "S — Skills", v: "Silos, bottlenecks, unused talent", icon: iconGraduation() },
+          ]
+        },
+        right: {
+          type: "callout",
+          title: "What we need from leadership",
+          bullets: [
+            "Protect focus: back WIP limits & prioritisation discipline",
+            "Support small, explicit enablement / paved road investment",
+            "Agree quarterly scorecard review (QBR) for trend steering"
+          ]
+        },
+        foot: "Reducing waste reclaims capacity for value and modernisation."
+      },
+
+      // Optional divider
+      {
+        id: "divider-mini",
+        type: "divider",
+        title: "How I Would Operate",
+        subtitle: "Applying the foundations to team structure, flow, planning, resilience, quality, tools and modernisation.",
+        chips: [
+          { label: "Teams", color: "var(--a)" },
+          { label: "Run vs Change", color: "var(--c)" },
+          { label: "OKR Alignment", color: "var(--b)" },
+          { label: "Quality + Resilience", color: "var(--d)" },
+          { label: "Tools + Tech Debt", color: "var(--f)" },
+        ]
+      },
+
+      // ---------------- Mini-deck (5 slides) ----------------
+      {
+        id: "teams",
+        title: "Organise Teams for Success",
+        subtitle: "Small number of durable teams, clear ownership, and low-friction collaboration",
+        badges: [
+          { label: "Team Topologies-inspired", color: "var(--a)" },
+          { label: "Low cognitive load", color: "var(--c)" },
+          { label: "Clear ownership", color: "var(--e)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "Structure & interaction model",
+          items: [
+            { tone: "var(--a)", icon: iconLayers(), title: "2–3 Stream-aligned teams", text: "Own outcomes end-to-end for key value streams (build & run), with clear service/domain boundaries." },
+            { tone: "var(--c)", icon: iconRoad(), title: "Enabling / micro-platform capability", text: "Paved road + automation + coaching. Build self-service, not a ticket queue. Time-boxed missions." },
+            { tone: "var(--b)", icon: iconShuffle(), title: "Explicit interaction modes", text: "X-as-a-Service by default; Collaboration only when needed (time-boxed); Facilitating for enablement." },
+            { tone: "var(--e)", icon: iconFlag(), title: "Ownership & decision rights", text: "Named owners for services; clear escalation paths; fewer handoffs and less ‘nobody owns this’ risk." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "We do", bullets: [
+            "Create durable teams sized for flow (6–9 people)",
+            "Align ownership to business value streams and services",
+            "Reduce dependencies with clear boundaries and paved paths",
+            "Time-box collaboration; default to self-service"
+          ]},
+          { type: "callout", title: "We avoid", bullets: [
+            "Component teams that create handoffs by default",
+            "A platform team as a catch-all dependency or ticket queue",
+            "Unowned services and unclear escalation paths"
+          ]},
+          { type: "kv", title: "Signals", rows: [
+            { k: "Dependency waiting", v: "Trend down" },
+            { k: "% services with owner/runbook", v: "Trend up" },
+            { k: "Onboarding to first deploy", v: "Trend down" }
+          ]}
+        ],
+        foot: "Talking point: clearer ownership + fewer handoffs → faster delivery and lower operational risk."
+      },
+
+      {
+        id: "run-change",
+        title: "Run vs Change: Capacity, Focus, Predictability",
+        subtitle: "Make operational work visible and funded so reliability and delivery don’t fight",
+        badges: [
+          { label: "Capacity model", color: "var(--f)" },
+          { label: "WIP discipline", color: "var(--c)" },
+          { label: "Stability first when needed", color: "var(--b)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "Run / Change / Improve",
+          items: [
+            { tone: "var(--c)", icon: iconActivity(), title: "RUN", text: "Incidents, on-call, BAU, operational requests, compliance hygiene, reliability maintenance." },
+            { tone: "var(--b)", icon: iconTarget(), title: "CHANGE", text: "Outcome-driven delivery with measurable success criteria and small-batch releases." },
+            { tone: "var(--a)", icon: iconRefresh(), title: "IMPROVE", text: "Toil reduction, automation, quality/reliability improvements, enablement missions." },
+            { tone: "var(--d)", icon: iconShield(), title: "Control: reliability signals", text: "When stability risk increases (error budget burn / incident trend), shift capacity to stabilise-first." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "We do", bullets: [
+            "Explicit capacity allocation + WIP limits",
+            "Make interrupts visible; reduce toil through automation",
+            "Stabilise-first when reliability risk increases",
+            "Protect focus: stop starting, start finishing"
+          ]},
+          { type: "callout", title: "We avoid", bullets: [
+            "100% utilisation and too many parallel initiatives",
+            "Invisible interrupts driving burnout and delays",
+            "Heroic firefighting as the operating model"
+          ]},
+          { type: "kv", title: "Signals", rows: [
+            { k: "Aging WIP / carryover", v: "Trend down" },
+            { k: "Toil / interrupt load", v: "Trend down" },
+            { k: "Incident recurrence", v: "Trend down" }
+          ]}
+        ],
+        foot: "Talking point: predictable delivery comes from controlling WIP and making operational demand explicit."
+      },
+
+      {
+        id: "planning",
+        title: "Planning & Estimation Aligned to Annual Objectives",
+        subtitle: "Clear line-of-sight: annual goals → quarterly outcomes → team slices → learn & adjust",
+        badges: [
+          { label: "OKR alignment", color: "var(--c)" },
+          { label: "Rolling forecast", color: "var(--b)" },
+          { label: "Evidence-driven", color: "var(--a)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "How planning works",
+          items: [
+            { tone: "var(--c)", icon: iconTarget(), title: "Annual objectives", text: "Company objectives set direction; we translate them into measurable outcomes and journeys." },
+            { tone: "var(--b)", icon: iconMapPin(), title: "Quarterly outcomes (OKRs)", text: "Define success measures; prioritise the bets that move those measures most." },
+            { tone: "var(--a)", icon: iconShuffle(), title: "Team slices & experiments", text: "Thin slices, early validation, staged rollouts; stop/pivot if not moving metrics." },
+            { tone: "var(--f)", icon: iconTrend(), title: "Estimation = decision support", text: "Use ranges + confidence to manage uncertainty, capacity and dependencies — not false precision." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "We do", bullets: [
+            "Translate annual objectives into quarterly outcomes and measurable journeys",
+            "Plan thin slices; validate early; stop/pivot based on evidence",
+            "Use rolling forecasts and re-plan at QBR checkpoints",
+            "Estimate using ranges/confidence to manage risk"
+          ]},
+          { type: "callout", title: "We avoid", bullets: [
+            "Big scope commitments without discovery/validation",
+            "Using story points as a performance metric",
+            "Mistaking roadmap certainty for delivery predictability"
+          ]},
+          { type: "kv", title: "Signals", rows: [
+            { k: "OKR progress", v: "Trend up" },
+            { k: "Outcome predictability", v: "Trend up" },
+            { k: "Decision → value shipped", v: "Trend down" }
+          ]}
+        ],
+        foot: "Talking point: estimation helps manage uncertainty — outcomes tell us if we were right."
+      },
+
+      {
+        id: "excellence",
+        title: "Engineering Excellence: Resilience, Incidents, Quality",
+        subtitle: "Build reliability and quality in so speed is sustainable — not fragile",
+        badges: [
+          { label: "SLOs + error budgets", color: "var(--b)" },
+          { label: "Safe change", color: "var(--c)" },
+          { label: "Consistency", color: "var(--a)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "How we harden delivery",
+          items: [
+            { tone: "var(--b)", icon: iconActivity(), title: "Reliability controls", text: "Define SLOs for critical journeys; manage error budgets to trigger stabilise-first." },
+            { tone: "var(--c)", icon: iconEye(), title: "Operability by default", text: "Logs/metrics/traces, meaningful alerts, dashboards, runbooks — tied to real user journeys." },
+            { tone: "var(--a)", icon: iconCheck(), title: "Quality built-in", text: "DoD includes testing, observability, maintainability, and review standards." },
+            { tone: "var(--d)", icon: iconShield(), title: "Incident learning loop", text: "Blameless postmortems with action follow-through to prevent recurrence." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "We do", bullets: [
+            "Use SLOs/error budgets to decide when to stabilise-first",
+            "Run blameless incident reviews focused on system fixes",
+            "Standardise CI/CD safety rails (tests, security, progressive delivery, rollback)",
+            "Raise consistency through templates, patterns and guardrails"
+          ]},
+          { type: "callout", title: "We avoid", bullets: [
+            "Manual gates as the primary control mechanism",
+            "Recurring incidents without systemic fixes",
+            "Treating quality as a late phase or a separate team"
+          ]},
+          { type: "kv", title: "Signals", rows: [
+            { k: "SLO attainment / error budget", v: "Improving" },
+            { k: "Change failure rate / MTTR", v: "Trend down" },
+            { k: "Escaped defects", v: "Trend down" }
+          ]}
+        ],
+        foot: "Talking point: safe, standardised delivery is how we go fast without breaking trust."
+      },
+
+      {
+        id: "tools-debt",
+        title: "Productivity & Modernisation: Tools (incl. AI) + Tech Debt",
+        subtitle: "Increase throughput and reduce legacy risk through managed modernisation and paved-road tooling",
+        badges: [
+          { label: "Paved road", color: "var(--c)" },
+          { label: "Modernise in slices", color: "var(--a)" },
+          { label: "AI with guardrails", color: "var(--f)" },
+        ],
+        left: {
+          type: "stack",
+          headline: "How we modernise and speed up",
+          items: [
+            { tone: "var(--c)", icon: iconRoad(), title: "Tooling as the paved road", text: "Golden paths, templates, CI/CD automation, environments, observability defaults — self-service adoption." },
+            { tone: "var(--a)", icon: iconLayers(), title: "Modernisation approach", text: "Strangler pattern; seams/contracts; replace in slices; retire hotspots; supported-version hygiene." },
+            { tone: "var(--b)", icon: iconTarget(), title: "Tech debt is budgeted", text: "Explicit capacity and prioritisation; ADRs for decisions; manage ‘interest’ and repay ‘principal’ deliberately." },
+            { tone: "var(--f)", icon: iconSpark(), title: "Agentic AI (guardrailed)", text: "Use for SDLC acceleration (tests, refactors, PR review, docs) with security, quality and audit controls." }
+          ]
+        },
+        right: [
+          { type: "callout", title: "We do", bullets: [
+            "Introduce productivity tools via paved-road paths (adoption > mandates)",
+            "Modernise continuously with the strangler pattern and clear exit criteria",
+            "Maintain supported-version and dependency hygiene",
+            "Use agentic AI with guardrails: secure inputs/outputs, review gates, traceability"
+          ]},
+          { type: "callout", title: "We avoid", bullets: [
+            "Big-bang rewrites and destabilising programmes",
+            "Tool sprawl without measurable adoption or safety controls",
+            "AI use that bypasses security, quality, or auditability"
+          ]},
+          { type: "kv", title: "Signals", rows: [
+            { k: "Paved-road adoption", v: "Trend up" },
+            { k: "% estate supported", v: "Trend up" },
+            { k: "Cycle time ↓ without CFR ↑", v: "Improving" }
+          ]}
+        ],
+        foot: "Talking point: we modernise safely and measurably — and use AI to remove toil, not add risk."
+      },
+      {
+        id: "roadmap",
+        title: "Roadmap: Immersion, Early Wins, Scale What Works",
+        subtitle: "Q1 (0–90): baseline + tighten + pilot. Remainder of year: scale what works (multi-year transformation, no big-bang).",
+        badges: [
+          { label: "Evidence-driven", color: "var(--b)" },
+          { label: "Risk-controlled change", color: "var(--c)" },
+          { label: "Multi-year journey", color: "var(--a)" }
+        ],
+        left: {
+          type: "roadmap",
+          headline: "First 90 days (outcomes + deliverables)",
+          phases: [
+            {
+              tone: "var(--c)",
+              t: "0–30: Baseline & Align (audit-first)",
+              outcomes: [
+                "Current-state view of flow, reliability, quality, tooling, debt",
+                "Agreement on ‘good’: SLOs/DoD/paved road scope/OKR linkage",
+                "Clear ownership for critical services and journeys"
+              ],
+              deliverables: [
+                "Lightweight engineering system audit + top constraints",
+                "Top journeys identified + instrumentation plan",
+                "Ownership map (owners, on-call, runbooks status)",
+                "Scorecard baseline (with known gaps)",
+                "Roadmap v1 prioritised by constraints"
+              ]
+            },
+            {
+              tone: "var(--b)",
+              t: "31–60: Stabilise & Enable",
+              outcomes: [
+                "Stabilisation capacity explicit; incident response consistent",
+                "Reduced toil/friction; safer, smaller changes",
+                "Early paved-road adoption"
+              ],
+              deliverables: [
+                "SLOs + error budgets for 2–3 key journeys/services",
+                "Incident uplift: templates + action tracking",
+                "Paved road quick wins (templates/CI checks/self-service access)",
+                "WIP limits + visible bottleneck review",
+                "Remove top 2 wastes (TIMWOODS) with concrete changes"
+              ]
+            },
+            {
+              tone: "var(--a)",
+              t: "61–90: Embed & Demonstrate Early Wins (thin-slice)",
+              outcomes: [
+                "Cadence running: scorecard used for prioritisation and trade-offs",
+                "Early evidence on 2–3 trend lines (e.g., lead time tail, MTTR, CFR, toil)",
+                "Modernisation plan is thin-sliced and risk-controlled (not a big-bang programme)"
+              ],
+              deliverables: [
+                "First QBR-style review: trends → actions → re-prioritisation",
+                "DoD v1 + release/rollback guidance + quality baseline",
+                "Modernisation thin-slice plan: top 3 hotspots + seams",
+                "Tooling/AI pilots with guardrails + success measures",
+                "Publish ways-of-working one-pager for teams."
+              ]
+            }
+          ]
+        },
+        right: [
+          {
+            type: "callout",
+            title: "What this roadmap covers",
+            bullets: [
+              "Teams & ownership • Run/Change capacity • OKR-aligned planning",
+              "Resilience & incident management • Quality & consistency",
+              "Tools & enablement (incl. AI) • Tech debt & legacy modernisation"
+            ]
+          },
+          {
+            type: "callout",
+            title: "Remainder of year (scale what works)",
+            bullets: [
+              "Q2: Expand guardrails + reduce toil (SLO coverage, paved road adoption, fewer repeat incidents)",
+              "Q3: Modernise in slices (1–2 legacy retirement wins, supported-version uplift, debt governance)",
+              "Q4: Institutionalise + plan next year (sustained trends, capability uplift, OKR translation playbook)"
+            ]
+          },
+          {
+            type: "kv",
+            title: "Success looks like",
+            rows: [
+              { k: "Predictability", v: "Up (shorter tail lead times)" },
+              { k: "Stability", v: "Up (SLOs met, less recurrence)" },
+              { k: "Quality", v: "Up (lower CFR/defects)" },
+              { k: "Modernisation", v: "Visible wins, continuous" }
+            ]
+          }
+        ],
+        foot: "Deliberately bounded scope: validate/adopt what exists, implement only where gaps create risk or friction; prove impact on 2–3 journeys/services before scaling."
+      },
+      // ---------------- Appendix (always last) ----------------
+      {
+        id: "scorecard",
+        title: "Appendix: Mini Scorecard",
+        subtitle: "Quarterly, trend-based signals to steer delivery health (lightweight)",
+        badges: [
+          { label: "QBR cadence", color: "var(--c)" },
+          { label: "Trends not targets", color: "var(--b)" },
+          { label: "Leading + lagging", color: "var(--a)" },
+        ],
+        left: {
+          type: "cards",
+          headline: "What we review (and why)",
+          cards: [
+            { icon: iconTrend(), title: "Outcomes", text: "OKR progress + 1–2 key journey metrics (impact, not activity)." },
+            { icon: iconActivity(), title: "Reliability", text: "SLO attainment + error budget burn (trust and stability)." },
+            { icon: iconShuffle(), title: "Flow", text: "Lead time + cycle time distribution (incl. tail latency)." },
+            { icon: iconCheck(), title: "Quality & Safety", text: "Change failure rate + MTTR (fast, safe change + recovery)." },
+            { icon: iconLock(), title: "Security", text: "Vulnerability remediation SLA + pipeline coverage." },
+            { icon: iconRoad(), title: "Paved Road / DevEx", text: "Golden path adoption + onboarding/provisioning time." },
+            { icon: iconFlag(), title: "Ownership", text: "% services with owner + runbook; time-to-right-owner." },
+            { icon: iconRefresh(), title: "Kaizen", text: "Improvement action completion + toil trend." },
+          ]
+        },
+        right: {
+          type: "kv",
+          title: "Suggested scorecard (max 8)",
+          rows: [
+            { k: "Outcomes", v: "OKR + journey metric(s)" },
+            { k: "Reliability", v: "SLO + error budget" },
+            { k: "Flow", v: "Lead time + cycle tail" },
+            { k: "Safety", v: "CFR + MTTR" },
+            { k: "Security", v: "Vuln SLA + CI coverage" },
+            { k: "Paved Road", v: "Adoption + onboarding time" },
+            { k: "Ownership", v: "% owned services/runbooks" },
+            { k: "Kaizen", v: "Actions + toil trend" }
+          ]
+        },
+        foot: "Appendix: keep signals small and consistent; discuss trends + actions."
+      }
+    ];
+
+    // Apply divider toggle
+    const slides = SHOW_DIVIDERS ? ALL_SLIDES : ALL_SLIDES.filter(s => s.type !== "divider");
+
+    // ------------------------- Elements -------------------------
+    const navEl = document.getElementById("nav");
+    const slideEl = document.getElementById("slide");
+    const progressChip = document.getElementById("progressChip");
+
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const hamburger = document.getElementById("hamburger");
+
+    const collapseBtn = document.getElementById("collapseBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const presenterToggle = document.getElementById("presenterToggle");
+    const presenterState = document.getElementById("presenterState");
+
+    const COLLAPSE_KEY = "fullDeck.sidebarCollapsed";
+    const PRESENTER_KEY = "fullDeck.presenterMode";
+
+    // ------------------------- Sidebar collapse (desktop) -------------------------
+    function setCollapsed(collapsed){
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      if (isMobile) return;
+      if (document.body.classList.contains("presenter")) return;
+      document.body.classList.toggle("sidebar-collapsed", collapsed);
+      collapseBtn.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+      collapseBtn.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+      collapseBtn.innerHTML = collapsed
+        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+             <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+           </svg>`
+        : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+             <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+           </svg>`;
+      localStorage.setItem(COLLAPSE_KEY, collapsed ? "1" : "0");
+    }
+    function toggleCollapsed(){ setCollapsed(!document.body.classList.contains("sidebar-collapsed")); }
+    collapseBtn.addEventListener("click", toggleCollapsed);
+
+    // ------------------------- Presenter mode -------------------------
+    function setPresenterMode(on){
+      document.body.classList.toggle("presenter", on);
+      presenterState.textContent = on ? "ON" : "OFF";
+      presenterState.style.color = on ? "var(--b)" : "var(--muted2)";
+      localStorage.setItem(PRESENTER_KEY, on ? "1" : "0");
+      if(on) document.body.classList.remove("sidebar-collapsed");
+      else {
+        const isMobile = window.matchMedia("(max-width: 900px)").matches;
+        if (!isMobile){
+          const saved = localStorage.getItem(COLLAPSE_KEY);
+          setCollapsed(saved === "1");
+        }
+      }
+    }
+    function togglePresenter(){ setPresenterMode(!document.body.classList.contains("presenter")); }
+    presenterToggle.addEventListener("click", togglePresenter);
+
+    (function initPresenter(){
+      const url = new URL(window.location.href);
+      if (url.searchParams.get("presenter") === "1") return setPresenterMode(true);
+      const saved = localStorage.getItem(PRESENTER_KEY);
+      setPresenterMode(saved === "1");
+    })();
+
+    (function restoreCollapsed(){
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      if (isMobile) return;
+      const saved = localStorage.getItem(COLLAPSE_KEY);
+      if (!document.body.classList.contains("presenter")) setCollapsed(saved === "1");
+    })();
+
+    window.addEventListener("resize", () => {
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      if (isMobile) document.body.classList.remove("sidebar-collapsed");
+      else if (!document.body.classList.contains("presenter")){
+        const saved = localStorage.getItem(COLLAPSE_KEY);
+        setCollapsed(saved === "1");
+      }
+    });
+
+    // ------------------------- Build nav -------------------------
+    function buildNav(){
+      navEl.innerHTML = "";
+      slides.forEach((s, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.idx = idx;
+        btn.setAttribute("aria-current", "false");
+
+        const navTitle = s.type === "divider" ? `— ${s.title}` : s.title;
+        const navSub = s.type === "divider" ? "Section divider" : s.subtitle;
+
+        btn.innerHTML = `
+          <div class="k">${idx+1}</div>
+          <div class="t">
+            <div class="title">${escapeHtml(navTitle)}</div>
+            <div class="sub">${escapeHtml(navSub || "")}</div>
+          </div>
+        `;
+        btn.addEventListener("click", () => go(idx, {closeSidebar:true}));
+        navEl.appendChild(btn);
+      });
+    }
+
+    // ------------------------- Rendering -------------------------
+    function renderBadges(badges){
+      if(!badges?.length) return "";
+      return `
+        <div class="badgeRow">
+          ${badges.map(b => `
+            <span class="badge">
+              <span class="dot" style="background:${b.color};"></span>
+              ${escapeHtml(b.label)}
+            </span>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderLeft(left){
+      if(!left) return "";
+
+      if(left.type === "stack"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">Model</span>
+            </div>
+            <div style="display:grid; gap:10px;">
+              ${left.items.map((it) => `
+                <div class="stackCard" style="border-color: color-mix(in srgb, ${it.tone} 35%, var(--stroke));">
+                  <div class="icon" style="background: color-mix(in srgb, ${it.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${it.tone} 30%, var(--stroke));" aria-hidden="true">
+                    ${it.icon}
+                  </div>
+                  <div>
+                    <h4>${escapeHtml(it.title)}</h4>
+                    <p>${escapeHtml(it.text)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if(left.type === "cards"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">Cards</span>
+            </div>
+            <div class="cards">
+              ${left.cards.map(c => `
+                <div class="card">
+                  <div class="icon" aria-hidden="true">${c.icon}</div>
+                  <div>
+                    <h4>${escapeHtml(c.title)}</h4>
+                    <p>${escapeHtml(c.text)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if(left.type === "diagram"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">Model</span>
+            </div>
+            <div style="display:grid; gap:10px;">
+              ${left.layers.map((l, i) => `
+                <div class="layerBox" style="border-color: color-mix(in srgb, ${l.tone} 35%, var(--stroke));">
+                  <div class="icon" style="background: color-mix(in srgb, ${l.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${l.tone} 30%, var(--stroke));" aria-hidden="true">
+                    ${i===0?iconStar():i===1?iconSettings():iconBan()}
+                  </div>
+                  <div>
+                    <div class="name">${escapeHtml(l.name)}</div>
+                    <div class="desc">${escapeHtml(l.desc)}</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if(left.type === "grid"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">TIMWOODS</span>
+            </div>
+            <div class="grid2">
+              ${left.items.map(it => `
+                <div class="gridItem">
+                  <div class="icon" aria-hidden="true">${it.icon}</div>
+                  <div>
+                    <div class="k">${escapeHtml(it.k)}</div>
+                    <div class="v">${escapeHtml(it.v)}</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if(left.type === "timeline"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">90 days</span>
+            </div>
+            <div style="display:grid; gap:10px;">
+              ${left.steps.map((st, i) => `
+                <div class="stackCard" style="border-color: color-mix(in srgb, ${st.tone} 35%, var(--stroke));">
+                  <div class="icon" style="background: color-mix(in srgb, ${st.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${st.tone} 30%, var(--stroke));" aria-hidden="true">
+                    ${i===0?iconClipboard():i===1?iconTool():iconRepeat()}
+                  </div>
+                  <div>
+                    <h4>${escapeHtml(st.t)}</h4>
+                    <p>${escapeHtml(st.d)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (left.type === "roadmap"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
+              <span class="chip">Roadmap</span>
+            </div>
+
+            <div style="display:grid; gap:10px;">
+              ${left.phases.map((ph) => `
+                <div class="stackCard" style="border-color: color-mix(in srgb, ${ph.tone} 35%, var(--stroke));">
+                  <div class="icon" style="background: color-mix(in srgb, ${ph.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${ph.tone} 30%, var(--stroke));" aria-hidden="true">
+                    ${iconClipboard()}
+                  </div>
+                  <div style="width:100%">
+                    <h4>${escapeHtml(ph.t)}</h4>
+
+                    <p style="margin-top:6px">
+                      <b>Outcomes:</b> ${escapeHtml(ph.outcomes.join(" • "))}
+                    </p>
+
+                    <p style="margin-top:6px">
+                      <b>Deliverables:</b> ${escapeHtml(ph.deliverables.join(" • "))}
+                    </p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderRightBlock(right){
+      if(!right) return "";
+      if(right.type === "callout"){
+        return `
+          <div class="callout">
+            <h3>${escapeHtml(right.title || "We do")}</h3>
+            <ul class="list">
+              ${right.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("")}
+            </ul>
+          </div>
+        `;
+      }
+      if(right.type === "kv"){
+        return `
+          <div class="panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
+              <strong style="font-size:13px; color:var(--text)">${escapeHtml(right.title || "Signals")}</strong>
+              <span class="chip">Signals</span>
+            </div>
+            <div class="kv">
+              ${right.rows.map(r => `
+                <div class="row">
+                  <span class="k">${escapeHtml(r.k)}</span>
+                  <span class="v">${escapeHtml(r.v)}</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+      return "";
+    }
+
+    function renderRight(right){
+      if(!right) return "";
+      const blocks = Array.isArray(right) ? right : [right];
+      return `<div class="rightStack">${blocks.map(renderRightBlock).join("")}</div>`;
+    }
+
+    function renderDivider(s){
+      const chips = (s.chips || []).map(ch => `
+        <span class="dividerChip"><span class="dot" style="background:${ch.color};"></span>${escapeHtml(ch.label)}</span>
+      `).join("");
+
+      slideEl.classList.add("divider");
+
+      slideEl.innerHTML = `
+        <div class="dividerInner">
+          <h2 class="dividerTitle">${escapeHtml(s.title)}</h2>
+          <p class="dividerSub">${escapeHtml(s.subtitle || "")}</p>
+          <div class="dividerChips">${chips}</div>
+        </div>
+      `;
+    }
+
+    function render(idx){
+      const s = slides[idx];
+      progressChip.textContent = `${idx+1} / ${slides.length}`;
+      Array.from(navEl.querySelectorAll("button")).forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
+
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === slides.length - 1;
+      prevBtn.style.opacity = prevBtn.disabled ? .6 : 1;
+      nextBtn.style.opacity = nextBtn.disabled ? .6 : 1;
+
+      // Divider
+      slideEl.classList.remove("divider");
+      if (s.type === "divider") return renderDivider(s);
+
+      slideEl.innerHTML = `
+        <div class="header">
+          <div class="titles">
+            <h2>${escapeHtml(s.title)}</h2>
+            <p>${escapeHtml(s.subtitle)}</p>
+          </div>
+          ${renderBadges(s.badges)}
+        </div>
+
+        <div class="content">
+          ${renderLeft(s.left)}
+          ${renderRight(s.right)}
+        </div>
+
+        <div class="footerNote">
+          <span>${escapeHtml(s.foot || "")}</span>
+          <span class="chip">#${escapeHtml(s.id)}</span>
+        </div>
+      `;
+    }
+
+    // ------------------------- Navigation -------------------------
+    function currentIndexFromHash(){
+      const h = (location.hash || "").replace("#", "");
+      if(!h) return 0;
+      const i = slides.findIndex(s => s.id === h);
+      return i >= 0 ? i : 0;
+    }
+
+    function go(idx, opts = {}){
+      const safe = Math.max(0, Math.min(slides.length - 1, idx));
+      const id = slides[safe].id;
+      if(location.hash.replace("#","") !== id) history.replaceState(null, "", "#" + id);
+      render(safe);
+      if(opts.closeSidebar) closeSidebar();
+      document.querySelector(".main")?.scrollTo?.({ top: 0, behavior: "smooth" });
+    }
+
+    function next(){ go(currentIndexFromHash() + 1); }
+    function prev(){ go(currentIndexFromHash() - 1); }
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    window.addEventListener("hashchange", () => go(currentIndexFromHash()));
+
+    window.addEventListener("keydown", (e) => {
+      const tag = (document.activeElement?.tagName || "").toLowerCase();
+      if(tag === "input" || tag === "textarea") return;
+
+      if(e.key === "ArrowRight" || e.key.toLowerCase() === "j") next();
+      if(e.key === "ArrowLeft" || e.key.toLowerCase() === "k") prev();
+
+      if(e.key.toLowerCase() === "p") togglePresenter();
+
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b"){
+        e.preventDefault();
+        toggleCollapsed();
+      }
+
+      if(e.key === "Escape") closeSidebar();
+    });
+
+    // Mobile drawer
+    function openSidebar(){
+      sidebar.classList.add("open");
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+    function closeSidebar(){
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+    hamburger?.addEventListener("click", openSidebar);
+    overlay?.addEventListener("click", closeSidebar);
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // ------------------------- Icons -------------------------
+    function iconBase(path){
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">${path}</svg>`;
+    }
+    function iconTarget(){ return iconBase(`<path d="M12 3v3m0 12v3M3 12h3m12 0h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" stroke-width="1.8"/>`); }
+    function iconTrend(){ return iconBase(`<path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 8V4h-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconActivity(){ return iconBase(`<path d="M4 13h3l2-6 4 12 2-6h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconShield(){ return iconBase(`<path d="M12 3l7 4v6c0 5-3 8-7 9-4-1-7-4-7-9V7l7-4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconCheck(){ return iconBase(`<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconLock(){ return iconBase(`<path d="M7 11V8a5 5 0 0110 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 11h10v10H7V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconLayers(){ return iconBase(`<path d="M12 2l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17l9 5 9-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconUsers(){ return iconBase(`<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 11a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.8"/><path d="M22 21v-2a4 4 0 00-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconFlag(){ return iconBase(`<path d="M6 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6 4h12l-2 4 2 4H6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconShuffle(){ return iconBase(`<path d="M16 3h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 20l6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 3l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10 14l6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconInbox(){ return iconBase(`<path d="M4 4h16v12H4V4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 12h4l2 3h4l2-3h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 20v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconEye(){ return iconBase(`<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/>`); }
+    function iconRoad(){ return iconBase(`<path d="M8 22l2-20h4l2 20" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6v4m0 4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconMapPin(){ return iconBase(`<path d="M12 21s7-4.35 7-11a7 7 0 10-14 0c0 6.65 7 11 7 11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.8"/>`); }
+    function iconRefresh(){ return iconBase(`<path d="M21 12a9 9 0 10-3.2 6.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M21 12v-6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconRepeat(){ return iconBase(`<path d="M17 1l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9a4 4 0 014-4h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 23l-4-4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconTool(){ return iconBase(`<path d="M14.7 6.3a4 4 0 01-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6l-3 3-2-2 3-3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>`); }
+    function iconClock(){ return iconBase(`<path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
+    function iconBox(){ return iconBase(`<path d="M21 8l-9-5-9 5 9 5 9-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 8v8l9 5 9-5V8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconScissors(){ return iconBase(`<path d="M4 8l16 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 16l16-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6.5 6.5a2.5 2.5 0 11-3.5 3.5 2.5 2.5 0 013.5-3.5z" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 14a2.5 2.5 0 11-3.5 3.5A2.5 2.5 0 016.5 14z" stroke="currentColor" stroke-width="1.8"/>`); }
+    function iconBug(){ return iconBase(`<path d="M9 9h6v6H9V9z" stroke="currentColor" stroke-width="1.8"/><path d="M9 5l-2-2M15 5l2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 13h5M15 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 20l2-2M17 20l-2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 9V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconGraduation(){ return iconBase(`<path d="M12 3l10 5-10 5L2 8l10-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 10v6c0 2 3 4 6 4s6-2 6-4v-6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconStar(){ return iconBase(`<path d="M12 2l2.6 6.5L21 9l-5 4.2L17 20l-5-3-5 3 1-6.8L3 9l6.4-.5L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`); }
+    function iconSettings(){ return iconBase(`<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a7.8 7.8 0 00.1-2l2-1.5-2-3.5-2.4.7a7.7 7.7 0 00-1.7-1l-.3-2.5H11l-.3 2.5a7.7 7.7 0 00-1.7 1L6.6 8l-2 3.5 2 1.5a7.8 7.8 0 00.1 2l-2 1.5 2 3.5 2.4-.7a7.7 7.7 0 001.7 1l.3 2.5h4l.3-2.5a7.7 7.7 0 001.7-1l2.4.7 2-3.5-2-1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>`); }
+    function iconBan(){ return iconBase(`<path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" stroke-width="1.8"/><path d="M7 7l10 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
+    function iconClipboard(){ return iconBase(`<path d="M9 4h6v3H9V4z" stroke="currentColor" stroke-width="1.8"/><path d="M7 7h10v14H7V7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
+    function iconSpark(){ return iconBase(`<path d="M12 2l1.7 6.2L20 10l-6.3 1.8L12 18l-1.7-6.2L4 10l6.3-1.8L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`); }
+
+    // ------------------------- Init -------------------------
+    buildNav();
+    go(currentIndexFromHash());
+
+    // ------------------------- Navigation helpers -------------------------
+    function currentIndexFromHash(){
+      const h = (location.hash || "").replace("#", "");
+      if(!h) return 0;
+      const i = slides.findIndex(s => s.id === h);
+      return i >= 0 ? i : 0;
+    }
+
+    function go(idx, opts = {}){
+      const safe = Math.max(0, Math.min(slides.length - 1, idx));
+      const id = slides[safe].id;
+      if(location.hash.replace("#","") !== id) history.replaceState(null, "", "#" + id);
+      render(safe);
+      if(opts.closeSidebar) closeSidebar();
+      document.querySelector(".main")?.scrollTo?.({ top: 0, behavior: "smooth" });
+    }
+
+    function next(){ go(currentIndexFromHash() + 1); }
+    function prev(){ go(currentIndexFromHash() - 1); }
+
+    function togglePresenter(){ setPresenterMode(!document.body.classList.contains("presenter")); }
+
+    // Start in presenter mode: ?presenter=1
+    (function initPresenter(){
+      const url = new URL(window.location.href);
+      if (url.searchParams.get("presenter") === "1") setPresenterMode(true);
+    })();
+
+    // Update progress immediately
+    progressChip.textContent = `1 / ${slides.length}`;
+  </script>
+</body>
+</html>
