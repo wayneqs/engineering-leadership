@@ -468,12 +468,19 @@
     /* Presenter floating controls */
     .presenterBar{
       position: fixed;
-      right: 16px;
-      top: 16px;
+      bottom: 16px;
+      left: calc((100vw + var(--sidebarW)) / 2);
+      transform: translateX(-50%);
       z-index: 1000;
       display:flex;
       gap: 10px;
       align-items:center;
+    }
+    body.sidebar-collapsed .presenterBar{
+      left: calc((100vw + var(--sidebarCollapsedW)) / 2);
+    }
+    body.presenter .presenterBar{
+      left: 50%;
     }
     .pbtn{
       cursor:pointer;
@@ -552,7 +559,8 @@
       body.sidebar-collapsed .nav .t{ display:flex; }
       body.sidebar-collapsed .sidebar .hint{ display:flex; }
 
-      .presenterBar{ right: 12px; top: 12px; }
+      .presenterBar{ bottom: 12px; left: 50%; }
+      body.sidebar-collapsed .presenterBar{ left: 50%; }
     }
 
     :focus-visible{
@@ -607,7 +615,7 @@
           </div>
           <div class="brandText">
             <h1>Engineering Deck</h1>
-            <p>Foundations → Plan</p>
+            <p>Wayne Quinlivan-Smith</p>
           </div>
         </div>
 
