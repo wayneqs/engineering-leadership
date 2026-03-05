@@ -817,7 +817,7 @@
           headline: "What this is (and how it works)",
           items: [
             { tone: "var(--b)", icon: iconTarget(), title: "Purpose & Outcomes", text: "A lightweight set of foundations and principles that guide delivery decisions and trade-offs to yield: Reliable delivery • Operational stability • Consistent engineering quality • Modernisation progress." },
-            { tone: "var(--a)", icon: iconStar(), title: "North Stars (decision scaffolding)", text: "Durable commitments that guide decisions when priorities clash (outcomes, reliability, security, quality, ownership)." },
+            { tone: "var(--a)", icon: iconStar(), title: "North Star (decision scaffolding)", text: "Durable commitments that guide decisions when priorities clash (outcomes, reliability, security, quality, ownership)." },
             { tone: "var(--a)", icon: iconSettings(), title: "Operating Principles", text: "Lean mechanics: flow, pull/WIP, visibility, safety rails, paved road, go-see, kaizen. Explicit management of the STOP list to remove structural waste that leads to excessive delay, rework, risk and cost." },
           ]
         },
@@ -839,8 +839,8 @@
       },
 
       {
-        id: "northstars",
-        title: "Engineering North Stars (7)",
+        id: "northstar",
+        title: "Engineering North Star",
         subtitle: "Trade-off setters — durable commitments that guide decisions",
         badges: [
           { label: "Direction", color: "var(--a)" },
@@ -849,7 +849,7 @@
         ],
         left: {
           type: "cards",
-          headline: "The 7 North Stars",
+          headline: "The 7 principles that guide our decisions",
           cards: [
             { icon: iconTrend(), title: "Outcomes over Output", text: "Measure success by customer/business impact, not activity." },
             { icon: iconActivity(), title: "Reliability is a Feature", text: "SLOs & error budgets guide stabilise-first decisions." },
@@ -864,7 +864,7 @@
           type: "callout",
           title: "Quarterly signals (small set)",
           bullets: [
-            "OKR progress + 1–2 journey metrics",
+            "OKR progress + 1-2 journey metrics",
             "SLO attainment + error budget burn",
             "Change failure rate + MTTR",
             "Lead time for changes",
@@ -920,8 +920,8 @@
           title: "What improves",
           rows: [
             { k: "Batch size", v: "Down" },
-            { k: "Queues / waiting", v: "Down" },
-            { k: "Rework / defects", v: "Down" },
+            { k: "Queues & waiting", v: "Down" },
+            { k: "Rework & defects", v: "Down" },
             { k: "Predictability", v: "Up" },
             { k: "Time to learn", v: "Down" }
           ]
@@ -938,8 +938,8 @@
           { label: "Teams", color: "var(--a)" },
           { label: "Run vs Change", color: "var(--c)" },
           { label: "OKR Alignment", color: "var(--b)" },
-          { label: "Quality + Resilience", color: "var(--d)" },
-          { label: "Tools + Tech Debt", color: "var(--f)" },
+          { label: "Quality & Resilience", color: "var(--d)" },
+          { label: "Tools & Tech Debt", color: "var(--f)" },
         ]
       },
 
@@ -956,15 +956,15 @@
           type: "stack",
           headline: "Structure & interaction model",
           items: [
-            { tone: "var(--a)", icon: iconLayers(), title: "2–3 Stream-aligned teams", text: "Own outcomes end-to-end for key value streams (build & run), with clear service/domain boundaries." },
-            { tone: "var(--c)", icon: iconRoad(), title: "Enabling / micro-platform capability", text: "Paved road + automation + coaching. Build self-service, not a ticket queue. Time-boxed missions." },
+            { tone: "var(--a)", icon: iconLayers(), title: "2-3 Stream-aligned teams", text: "Own outcomes end-to-end for key value streams (build & run), with clear service/domain boundaries." },
+            { tone: "var(--c)", icon: iconRoad(), title: "Enabling / micro-platform capability", text: "Paved road & automation & coaching. Build self-service, not a ticket queue. Time-boxed missions." },
             { tone: "var(--b)", icon: iconShuffle(), title: "Explicit interaction modes", text: "X-as-a-Service by default; Collaboration only when needed (time-boxed); Facilitating for enablement." },
             { tone: "var(--e)", icon: iconFlag(), title: "Ownership & decision rights", text: "Named owners for services; clear escalation paths; fewer handoffs and less ‘nobody owns this’ risk." }
           ]
         },
         right: [
           { type: "callout", title: "We do", bullets: [
-            "Create durable teams sized for flow (6–9 people)",
+            "Create durable teams sized for flow (6-9 people)",
             "Align ownership to business value streams and services",
             "Reduce dependencies with clear boundaries and paved paths",
             "Time-box collaboration; default to self-service"
@@ -986,7 +986,7 @@
       {
         id: "run-change",
         title: "Run vs Change: Capacity, Focus, Predictability",
-        subtitle: "Make operational work visible and funded so reliability and delivery don’t fight",
+        subtitle: "Make operational work visible and funded so reliability and delivery don't clash",
         badges: [
           { label: "Capacity model", color: "var(--f)" },
           { label: "WIP discipline", color: "var(--c)" },
@@ -1004,7 +1004,7 @@
         },
         right: [
           { type: "callout", title: "We do", bullets: [
-            "Explicit capacity allocation + WIP limits",
+            "Explicit capacity allocation & WIP limits",
             "Make interrupts visible; reduce toil through automation",
             "Stabilise-first when reliability risk increases",
             "Protect focus: stop starting, start finishing"
@@ -1039,7 +1039,7 @@
             { tone: "var(--c)", icon: iconTarget(), title: "Annual objectives", text: "Company objectives set direction; we translate them into measurable outcomes and journeys." },
             { tone: "var(--b)", icon: iconMapPin(), title: "Quarterly outcomes (OKRs)", text: "Define success measures; prioritise the bets that move those measures most." },
             { tone: "var(--a)", icon: iconShuffle(), title: "Team slices & experiments", text: "Thin slices, early validation, staged rollouts; stop/pivot if not moving metrics." },
-            { tone: "var(--f)", icon: iconTrend(), title: "Estimation = decision support", text: "Use ranges + confidence to manage uncertainty, capacity and dependencies — not false precision." }
+            { tone: "var(--f)", icon: iconTrend(), title: "Estimation = decision support", text: "Use ranges & confidence to manage uncertainty, capacity and dependencies — not false precision." }
           ]
         },
         right: [
@@ -1118,7 +1118,7 @@
           items: [
             { tone: "var(--c)", icon: iconRoad(), title: "Tooling as the paved road", text: "Golden paths, templates, CI/CD automation, environments, observability defaults — self-service adoption." },
             { tone: "var(--a)", icon: iconLayers(), title: "Modernisation approach", text: "Strangler pattern; seams/contracts; replace in slices; retire hotspots; supported-version hygiene." },
-            { tone: "var(--b)", icon: iconTarget(), title: "Tech debt is budgeted", text: "Explicit capacity and prioritisation; ADRs for decisions; manage ‘interest’ and repay ‘principal’ deliberately." },
+            { tone: "var(--b)", icon: iconTarget(), title: "Tech debt is budgeted", text: "Explicit capacity and prioritisation; ADRs for decisions; manage 'interest' and repay ‘principal’ deliberately." },
             { tone: "var(--f)", icon: iconSpark(), title: "Agentic AI (guardrailed)", text: "Use for SDLC acceleration (tests, refactors, PR review, docs) with security, quality and audit controls. Run controlled experients with full agentic coding tools (Codex, Claude Code, etc) to build experience and confidence." }
           ]
         },
@@ -1145,7 +1145,7 @@
       {
         id: "roadmap",
         title: "Roadmap: Immersion, Early Wins, Scale What Works",
-        subtitle: "Q1 (0–90): baseline + tighten + pilot. Remainder of year: scale what works (multi-year transformation, no big-bang).",
+        subtitle: "Q1 (0-90): baseline + tighten + pilot. Remainder of year: scale what works (multi-year transformation, no big-bang).",
         badges: [
           { label: "Evidence-driven", color: "var(--b)" },
           { label: "Risk-controlled change", color: "var(--c)" },
@@ -1157,10 +1157,10 @@
           phases: [
             {
               tone: "var(--c)",
-              t: "0–30: Baseline & Align (audit-first)",
+              t: "0-30: Baseline & Align (audit-first)",
               outcomes: [
                 "Current-state view of flow, reliability, quality, tooling, debt",
-                "Agreement on ‘good’: SLOs/DoD/paved road scope/OKR linkage",
+                "Agreement on 'good': SLOs/DoD/paved road scope/OKR linkage",
                 "Clear ownership for critical services and journeys"
               ],
               deliverables: [
@@ -1173,14 +1173,14 @@
             },
             {
               tone: "var(--b)",
-              t: "31–60: Stabilise & Enable",
+              t: "31-60: Stabilise & Enable",
               outcomes: [
                 "Stabilisation capacity explicit; incident response consistent",
                 "Reduced toil/friction; safer, smaller changes",
                 "Early paved-road adoption"
               ],
               deliverables: [
-                "SLOs + error budgets for 2–3 key journeys/services",
+                "SLOs + error budgets for 2-3 key journeys/services",
                 "Incident uplift: templates + action tracking",
                 "Paved road quick wins (templates/CI checks/self-service access)",
                 "WIP limits + visible bottleneck review",
@@ -1189,10 +1189,10 @@
             },
             {
               tone: "var(--a)",
-              t: "61–90: Embed & Demonstrate Early Wins (thin-slice)",
+              t: "61-90: Embed & Demonstrate Early Wins (thin-slice)",
               outcomes: [
                 "Cadence running: scorecard used for prioritisation and trade-offs",
-                "Early evidence on 2–3 trend lines (e.g., lead time tail, MTTR, CFR, toil)",
+                "Early evidence on 2-3 trend lines (e.g., lead time tail, MTTR, CFR, toil)",
                 "Modernisation plan is thin-sliced and risk-controlled (not a big-bang programme)"
               ],
               deliverables: [
@@ -1220,7 +1220,7 @@
             title: "Remainder of year (scale what works)",
             bullets: [
               "Q2: Expand guardrails + reduce toil (SLO coverage, paved road adoption, fewer repeat incidents)",
-              "Q3: Modernise in slices (1–2 legacy retirement wins, supported-version uplift, debt governance)",
+              "Q3: Modernise in slices (1-2 legacy retirement wins, supported-version uplift, debt governance)",
               "Q4: Institutionalise + plan next year (sustained trends, capability uplift, OKR translation playbook)"
             ]
           },
@@ -1235,7 +1235,7 @@
             ]
           }
         ],
-        foot: "Deliberately bounded scope: validate/adopt what exists, implement only where gaps create risk or friction; prove impact on 2–3 journeys/services before scaling."
+        foot: "Deliberately bounded scope: validate/adopt what exists, implement only where gaps create risk or friction; prove impact on 2-3 journeys/services before scaling."
       },
       // ---------------- Appendix (always last) ----------------
       {
@@ -1251,31 +1251,31 @@
           type: "cards",
           headline: "What we review (and why)",
           cards: [
-            { icon: iconTrend(), title: "Outcomes", text: "OKR progress + 1–2 key journey metrics (impact, not activity)." },
-            { icon: iconActivity(), title: "Reliability", text: "SLO attainment + error budget burn (trust and stability)." },
-            { icon: iconShuffle(), title: "Flow", text: "Lead time + cycle time distribution (incl. P95 tail latency) + deployment frequency." },
-            { icon: iconCheck(), title: "Quality & Safety", text: "Change failure rate + MTTR (fast, safe change + recovery)." },
-            { icon: iconLock(), title: "Security", text: "Vulnerability remediation SLA + pipeline coverage." },
-            { icon: iconRoad(), title: "Paved Road / DevEx", text: "Golden path adoption + onboarding/provisioning time." },
-            { icon: iconFlag(), title: "Ownership", text: "% services with owner + runbook; time-to-right-owner." },
-            { icon: iconRefresh(), title: "Kaizen", text: "Improvement action completion + toil trend." },
+            { icon: iconTrend(), title: "Outcomes", text: "OKR progress & 1-2 key journey metrics (impact, not activity)." },
+            { icon: iconActivity(), title: "Reliability", text: "SLO attainment & error budget burn (trust and stability)." },
+            { icon: iconShuffle(), title: "Flow", text: "Lead time & cycle time distribution (incl. P95 tail latency) & deployment frequency." },
+            { icon: iconCheck(), title: "Quality & Safety", text: "Change failure rate & MTTR (fast, safe change & recovery)." },
+            { icon: iconLock(), title: "Security", text: "Vulnerability remediation SLA & pipeline coverage." },
+            { icon: iconRoad(), title: "Paved Road / DevEx", text: "Golden path adoption & onboarding/provisioning time." },
+            { icon: iconFlag(), title: "Ownership", text: "% services with owner & runbook; time-to-right-owner." },
+            { icon: iconRefresh(), title: "Kaizen", text: "Improvement action completion & toil trend." },
           ]
         },
         right: {
           type: "kv",
           title: "Suggested scorecard (max 8)",
           rows: [
-            { k: "Outcomes", v: "OKR + journey metric(s)" },
-            { k: "Reliability", v: "SLO + error budget" },
-            { k: "Flow", v: "Lead time + cycle tail + deployment frequency" },
-            { k: "Safety", v: "CFR + MTTR" },
-            { k: "Security", v: "Vuln SLA + CI coverage" },
-            { k: "Paved Road", v: "Adoption + onboarding time" },
+            { k: "Outcomes", v: "OKR & journey metric(s)" },
+            { k: "Reliability", v: "SLO & error budget" },
+            { k: "Flow", v: "Lead time & cycle tail & deployment frequency" },
+            { k: "Safety", v: "CFR & MTTR" },
+            { k: "Security", v: "Vuln SLA & CI coverage" },
+            { k: "Paved Road", v: "Adoption & onboarding time" },
             { k: "Ownership", v: "% owned services/runbooks" },
-            { k: "Kaizen", v: "Actions + toil trend" }
+            { k: "Kaizen", v: "Actions & toil trend" }
           ]
         },
-        foot: "Appendix: keep signals small and consistent; discuss trends + actions."
+        foot: "Appendix: keep signals small and consistent; discuss trends & actions."
       }
     ];
 
