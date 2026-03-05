@@ -77,21 +77,28 @@
         radial-gradient(800px 500px at 10% 85%, rgba(249,115,22,.12), transparent 55%),
         var(--bg);
       color: var(--text);
-      overflow: hidden;
+      overflow: auto;
     }
 
     /* Layout */
     .app{
-      height:100%;
+      min-height: 100%;
+      height: auto;              /* allow growth */
       display:grid;
       grid-template-columns: var(--sidebarW) 1fr;
       transition: grid-template-columns .18s ease;
+      align-items: start;        /* prevent stretching */
     }
+
     body.sidebar-collapsed .app{ grid-template-columns: var(--sidebarCollapsedW) 1fr; }
     body.presenter .app{ grid-template-columns: 1fr; } /* presenter hides sidebar */
 
     /* Sidebar */
+    /* Keep sidebar visible while page scrolls */
     .sidebar{
+      position: sticky;
+      top: 0;
+      height: 100vh;
       border-right: 1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       backdrop-filter: blur(14px);
@@ -194,9 +201,129 @@
       color: var(--muted);
     }
 
+    .twHead{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+
+    .twBadge{
+      width: 26px;
+      height: 22px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      font-weight: 900;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+    }
+
+    /* Make badge match the danger theme */
+    .callout.danger .twBadge{
+      border-color: rgba(225,29,72,.28);
+      background: rgba(225,29,72,.14);
+    }
+
+    .twGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 10px;
+      margin-top: 2px;
+    }
+
+    .twItem{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      border-radius: 14px;
+      padding: 9px 10px;
+    }
+
+    .callout.danger .twItem{
+      border-color: rgba(225,29,72,.22);
+      background: rgba(225,29,72,.08);
+    }
+
+    .twK{
+      font-weight: 900;
+      font-size: 12.5px;
+      letter-spacing: .1px;
+      margin: 0;
+    }
+
+    .twV{
+      margin-top: 4px; line-height: 1.3;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    /* Make it 1 column on narrow widths (incl. mobile) */
+    @media (max-width: 900px){
+      .twGrid{ grid-template-columns: 1fr; }
+    }
+    /* Chip rows inside callouts */
+    .calloutChips{
+      display:grid;
+      gap: 10px;
+    }
+
+    /* was: align-items: start; */
+    .calloutChipRow{
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;   /* <-- change to center */
+    }
+
+    /* remove the nudge */
+    .calloutChipLabel{
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      padding-top: 0;        /* <-- was 3px */
+    }
+
+    .calloutChipWrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+    }
+
+    .calloutChip{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Callout tone variants */
+    .callout.danger{
+      border-color: rgba(225,29,72,.28);
+      background: linear-gradient(135deg, rgba(225,29,72,.14), rgba(249,115,22,.08));
+    }
+
+    /* Make chips feel a bit more “warning” inside danger callout */
+    .callout.danger .calloutChip{
+      border-color: rgba(225,29,72,.22);
+      background: rgba(225,29,72,.10);
+      color: rgba(255,255,255,.88);
+    }
+
+
+    @media (prefers-color-scheme: light){
+      .callout.danger .calloutChip{
+        color: rgba(10,15,30,.80);
+      }
+    }
+
     /* Main */
+
     .main{
-      overflow:auto;
+      overflow: visible;         /* no nested scrolling */
       padding: 26px 22px;
       display:flex;
       justify-content:center;
@@ -300,17 +427,21 @@
       line-height: 1.65;
     }
 
-    .kv{ display:grid; gap: 10px; }
+    .kv{ display:grid; gap: 8px; }
     .kv .row{
       display:flex; justify-content:space-between; gap: 12px;
-      padding: 12px 14px;
-      border-radius: 14px;
+      padding: 9px 12px;        /* was 12px 14px */
+      border-radius: 12px;      /* slightly tighter */
       border: 1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       font-size: var(--kv);
     }
     .kv .row .k{ color: var(--muted) }
     .kv .row .v{ color: var(--text); font-weight: 650; }
+
+    .panel > div[style*="margin-bottom:12px"]{
+      margin-bottom: 8px !important;
+    }
 
     /* Left: stack cards */
     .stackCard{
@@ -753,7 +884,24 @@
             { icon: iconRefresh(), title: "Kaizen", text: "Retros with follow-through; reduce toil; grow skills." },
           ]
         },
-        right: {
+        right: [
+        {
+          type: "callout",
+          tone: "danger",
+          variant: "tw-grid",
+          title: "TIMWOODS (anti-list we actively remove)",
+          items: [
+            { k: "T — Transportation", v: "Handoffs, ticket ping-pong, context loss between teams." },
+            { k: "I — Inventory", v: "Too much WIP; large queues of half-done work." },
+            { k: "M — Motion", v: "Tool friction, manual steps, context switching and toil." },
+            { k: "W — Waiting", v: "Queues for reviews, approvals, environments, dependencies." },
+            { k: "O — Overproduction", v: "Building too much or too early without validated demand." },
+            { k: "O — Overprocessing", v: "Heavy ceremony, gold-plating, duplicated docs/work." },
+            { k: "D — Defects", v: "Rework from bugs, regressions, incidents; failure demand." },
+            { k: "S — Skills", v: "Silos, bottlenecks, single points of failure; unused talent." }
+          ]
+        },  
+        {
           type: "kv",
           title: "What improves",
           rows: [
@@ -763,45 +911,9 @@
             { k: "Predictability", v: "Up" },
             { k: "Time to learn", v: "Down" }
           ]
-        },
-        foot: "This layer maps directly to TIMWOODS: it’s the countermeasure set."
+        }],
+        foot: ""
       },
-
-      {
-        id: "timwoods",
-        title: "TIMWOODS: What We Stop Doing",
-        subtitle: "Anti-patterns that create delay, rework, risk and cost",
-        badges: [
-          { label: "STOP list", color: "var(--d)" },
-          { label: "Waste removal", color: "var(--b)" },
-          { label: "Leadership asks", color: "var(--e)" },
-        ],
-        left: {
-          type: "grid",
-          headline: "8 wastes (software examples)",
-          items: [
-            { k: "T — Transportation", v: "Ticket ping-pong, unclear boundaries, handoffs", icon: iconRepeat() },
-            { k: "I — Inventory", v: "Too much WIP, over-committed backlog", icon: iconLayers() },
-            { k: "M — Motion", v: "Tool friction, manual steps, context switching", icon: iconTool() },
-            { k: "W — Waiting", v: "Approval queues, review delays, env waits", icon: iconClock() },
-            { k: "O — Overproduction", v: "Building more than needed, speculative scope", icon: iconBox() },
-            { k: "O — Overprocessing", v: "Heavy ceremony, gold-plating, duplicate docs", icon: iconScissors() },
-            { k: "D — Defects", v: "Rework, regressions, recurring incidents", icon: iconBug() },
-            { k: "S — Skills", v: "Silos, bottlenecks, unused talent", icon: iconGraduation() },
-          ]
-        },
-        right: {
-          type: "callout",
-          title: "What we need from leadership",
-          bullets: [
-            "Protect focus: back WIP limits & prioritisation discipline",
-            "Support small, explicit enablement / paved road investment",
-            "Agree quarterly scorecard review (QBR) for trend steering"
-          ]
-        },
-        foot: "Reducing waste reclaims capacity for value and modernisation."
-      },
-
       // Optional divider
       {
         id: "divider-mini",
@@ -1432,16 +1544,7 @@
 
     function renderRightBlock(right){
       if(!right) return "";
-      if(right.type === "callout"){
-        return `
-          <div class="callout">
-            <h3>${escapeHtml(right.title || "We do")}</h3>
-            <ul class="list">
-              ${right.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("")}
-            </ul>
-          </div>
-        `;
-      }
+
       if(right.type === "kv"){
         return `
           <div class="panel">
@@ -1457,6 +1560,63 @@
                 </div>
               `).join("")}
             </div>
+          </div>
+        `;
+      }
+      
+      if (right.type === "callout") {
+        const toneClass = right.tone ? ` ${right.tone}` : "";
+
+        // TIMWOODS grid variant
+        if (right.variant === "tw-grid") {
+          const items = (right.items || []).map(it => {
+            const parts = String(it.k || "").split("—");
+            const abbr = (parts[0] || "").trim();              // e.g. "T"
+            const label = (parts[1] || it.k || "").trim();     // e.g. "Transportation"
+              return `
+                <div class="twItem">
+                  <div class="twHead">
+                    <span class="twBadge">${escapeHtml(abbr)}</span>
+                    <div class="twK">${escapeHtml(label)}</div>
+                  </div>
+                  <div class="twV">${escapeHtml(it.v)}</div>
+                </div>
+              `;
+          }).join("");
+
+          return `
+            <div class="callout${toneClass}">
+              <h3>${escapeHtml(right.title || "")}</h3>
+              <div class="twGrid">${items}</div>
+            </div>
+          `;
+        }
+        // Chips variant
+        if (right.variant === "chips") {
+          const rows = (right.chipRows || []).map(r => `
+            <div class="calloutChipRow">
+              <div class="calloutChipLabel">${escapeHtml(r.label)}:</div>
+              <div class="calloutChipWrap">
+                ${(r.chips || []).map(ch => `<span class="calloutChip">${escapeHtml(ch)}</span>`).join("")}
+              </div>
+            </div>
+          `).join("");
+
+          return `
+            <div class="callout${toneClass}">
+              <h3>${escapeHtml(right.title || "")}</h3>
+              <div class="calloutChips">${rows}</div>
+            </div>
+          `;
+        }
+
+        // Default bullets variant
+        return `
+          <div class="callout${toneClass}">
+            <h3>${escapeHtml(right.title || "We do")}</h3>
+            <ul class="list">
+              ${(right.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join("")}
+            </ul>
           </div>
         `;
       }
