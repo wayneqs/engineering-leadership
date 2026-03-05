@@ -988,7 +988,7 @@
         title: "Run vs Change: Capacity, Focus, Predictability",
         subtitle: "Make operational work visible and funded so reliability and delivery don't clash",
         badges: [
-          { label: "Capacity model", color: "var(--f)" },
+          { label: "Dynamic capacity allocation model", color: "var(--f)" },
           { label: "WIP discipline", color: "var(--c)" },
           { label: "Stability first when needed", color: "var(--b)" },
         ],
@@ -996,17 +996,17 @@
           type: "stack",
           headline: "Run / Change / Improve",
           items: [
-            { tone: "var(--c)", icon: iconActivity(), title: "RUN", text: "Incidents, on-call, BAU, operational requests, compliance hygiene, reliability maintenance." },
-            { tone: "var(--b)", icon: iconTarget(), title: "CHANGE", text: "Outcome-driven delivery with measurable success criteria and small-batch releases." },
-            { tone: "var(--a)", icon: iconRefresh(), title: "IMPROVE", text: "Toil reduction, automation, quality/reliability improvements, enablement missions." },
+            { tone: "var(--b)", icon: iconTarget(), title: "CHANGE (70%)", text: "Outcome-driven delivery with measurable success criteria and small-batch releases." },
+            { tone: "var(--c)", icon: iconActivity(), title: "RUN (RESPONSE) (15%)", text: "Incidents, on-call, BAU, operational requests, compliance hygiene, reliability maintenance." },
+            { tone: "var(--a)", icon: iconRefresh(), title: "RUN (IMPROVE) (15%)", text: "Toil reduction, technical-debt, automation, quality/reliability improvements, enablement missions." },
             { tone: "var(--d)", icon: iconShield(), title: "Control: reliability signals", text: "When stability risk increases (error budget burn / incident trend), shift capacity to stabilise-first." }
           ]
         },
         right: [
           { type: "callout", title: "We do", bullets: [
-            "Explicit capacity allocation & WIP limits",
+            "Explicit WIP limits & dynanically adjusted capacity allocation",
             "Make interrupts visible; reduce toil through automation",
-            "Stabilise-first when reliability risk increases",
+            "'Stabilise-first' approach agreed up-front in response to 'red' reliability signals",
             "Protect focus: stop starting, start finishing"
           ]},
           { type: "callout", title: "We avoid", bullets: [
