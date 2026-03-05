@@ -1106,7 +1106,7 @@
             { tone: "var(--c)", icon: iconRoad(), title: "Tooling as the paved road", text: "Golden paths, templates, CI/CD automation, environments, observability defaults — self-service adoption." },
             { tone: "var(--a)", icon: iconLayers(), title: "Modernisation approach", text: "Strangler pattern; seams/contracts; replace in slices; retire hotspots; supported-version hygiene." },
             { tone: "var(--b)", icon: iconTarget(), title: "Tech debt is budgeted", text: "Explicit capacity and prioritisation; ADRs for decisions; manage ‘interest’ and repay ‘principal’ deliberately." },
-            { tone: "var(--f)", icon: iconSpark(), title: "Agentic AI (guardrailed)", text: "Use for SDLC acceleration (tests, refactors, PR review, docs) with security, quality and audit controls." }
+            { tone: "var(--f)", icon: iconSpark(), title: "Agentic AI (guardrailed)", text: "Use for SDLC acceleration (tests, refactors, PR review, docs) with security, quality and audit controls. Run controlled experients with full agentic coding tools (Codex, Claude Code, etc) to build experience and confidence." }
           ]
         },
         right: [
@@ -1114,7 +1114,7 @@
             "Introduce productivity tools via paved-road paths (adoption > mandates)",
             "Modernise continuously with the strangler pattern and clear exit criteria",
             "Maintain supported-version and dependency hygiene",
-            "Use agentic AI with guardrails: secure inputs/outputs, review gates, traceability"
+            "Use agentic AI with guardrails: secure inputs/outputs, review gates, traceability. Build real experience before wider adoption."
           ]},
           { type: "callout", title: "We avoid", bullets: [
             "Big-bang rewrites and destabilising programmes",
@@ -1240,7 +1240,7 @@
           cards: [
             { icon: iconTrend(), title: "Outcomes", text: "OKR progress + 1–2 key journey metrics (impact, not activity)." },
             { icon: iconActivity(), title: "Reliability", text: "SLO attainment + error budget burn (trust and stability)." },
-            { icon: iconShuffle(), title: "Flow", text: "Lead time + cycle time distribution (incl. tail latency)." },
+            { icon: iconShuffle(), title: "Flow", text: "Lead time + cycle time distribution (incl. P95 tail latency) + deployment frequency." },
             { icon: iconCheck(), title: "Quality & Safety", text: "Change failure rate + MTTR (fast, safe change + recovery)." },
             { icon: iconLock(), title: "Security", text: "Vulnerability remediation SLA + pipeline coverage." },
             { icon: iconRoad(), title: "Paved Road / DevEx", text: "Golden path adoption + onboarding/provisioning time." },
@@ -1254,7 +1254,7 @@
           rows: [
             { k: "Outcomes", v: "OKR + journey metric(s)" },
             { k: "Reliability", v: "SLO + error budget" },
-            { k: "Flow", v: "Lead time + cycle tail" },
+            { k: "Flow", v: "Lead time + cycle tail + deployment frequency" },
             { k: "Safety", v: "CFR + MTTR" },
             { k: "Security", v: "Vuln SLA + CI coverage" },
             { k: "Paved Road", v: "Adoption + onboarding time" },
