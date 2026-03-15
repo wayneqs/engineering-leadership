@@ -3,1826 +3,2192 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Engineering Foundations + Mini-Deck</title>
-  <meta name="color-scheme" content="light dark" />
+  <title>Engineering Leadership Handbook</title>
+  <meta name="color-scheme" content="light" />
   <style>
-    :root{
-      --bg: #0b1020;
-      --panel: rgba(255,255,255,.06);
-      --stroke: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.72);
-      --muted2: rgba(255,255,255,.58);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 18px;
-
-      --a: #7c3aed;  /* violet */
-      --b: #22c55e;  /* green */
-      --c: #06b6d4;  /* cyan */
-      --d: #f97316;  /* orange */
-      --e: #e11d48;  /* rose */
-      --f: #facc15;  /* amber */
-
-      --sidebarW: 330px;
-      --sidebarCollapsedW: 76px;
-
-      /* Normal mode sizing */
-      --maxW: 1440px;
-      --slidePad: 32px;
-      --minSlideH: 640px;
-
-      --h2: clamp(24px, 2.2vw + 12px, 40px);
-      --sub: clamp(15px, .55vw + 12px, 18px);
-      --cardTitle: 14.5px;
-      --cardBody: 13.5px;
-      --list: 14px;
-      --kv: 14px;
+    :root {
+      --bg: #f4efe6;
+      --paper: rgba(255, 251, 245, 0.86);
+      --paper-strong: #fffaf3;
+      --ink: #172033;
+      --muted: #5d687c;
+      --line: rgba(23, 32, 51, 0.12);
+      --line-strong: rgba(23, 32, 51, 0.2);
+      --navy: #1c2e4a;
+      --teal: #0f766e;
+      --rust: #b45309;
+      --olive: #556b2f;
+      --berry: #9f1239;
+      --sky: #0f5f8c;
+      --shadow: 0 20px 50px rgba(23, 32, 51, 0.12);
+      --radius: 22px;
+      --sidebar: 320px;
+      --content: 1180px;
+      --display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --body: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Presenter mode: bigger + wider + cleaner */
-    body.presenter{
-      --maxW: 1720px;
-      --slidePad: 44px;
-      --minSlideH: 740px;
-
-      --h2: clamp(30px, 2.7vw + 14px, 52px);
-      --sub: clamp(17px, .8vw + 12px, 22px);
-      --cardTitle: 16px;
-      --cardBody: 15px;
-      --list: 16px;
-      --kv: 16px;
+    * {
+      box-sizing: border-box;
     }
 
-    @media (prefers-color-scheme: light) {
-      :root{
-        --bg: #f6f7fb;
-        --panel: rgba(255,255,255,.9);
-        --stroke: rgba(10,15,30,.10);
-        --text: rgba(10,15,30,.92);
-        --muted: rgba(10,15,30,.70);
-        --muted2: rgba(10,15,30,.55);
-        --shadow: 0 18px 50px rgba(10,15,30,.10);
-      }
+    html {
+      scroll-behavior: smooth;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--body);
+      color: var(--ink);
       background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(124,58,237,.26), transparent 60%),
-        radial-gradient(1100px 700px at 90% 20%, rgba(6,182,212,.18), transparent 58%),
-        radial-gradient(900px 600px at 70% 95%, rgba(34,197,94,.16), transparent 55%),
-        radial-gradient(800px 500px at 10% 85%, rgba(249,115,22,.12), transparent 55%),
-        var(--bg);
-      color: var(--text);
+        radial-gradient(circle at 15% 10%, rgba(15, 118, 110, 0.12), transparent 0 32%),
+        radial-gradient(circle at 85% 0%, rgba(180, 83, 9, 0.14), transparent 0 28%),
+        radial-gradient(circle at 70% 90%, rgba(15, 95, 140, 0.12), transparent 0 30%),
+        linear-gradient(180deg, #f8f3eb 0%, #f1ebdf 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .layout {
+      width: min(100%, calc(var(--sidebar) + var(--content) + 64px));
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+      display: grid;
+      grid-template-columns: var(--sidebar) 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      padding: 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255, 250, 243, 0.74);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
       overflow: auto;
     }
 
-    /* Layout */
-    .app{
-      min-height: 100%;
-      height: auto;              /* allow growth */
-      display:grid;
-      grid-template-columns: var(--sidebarW) 1fr;
-      transition: grid-template-columns .18s ease;
-      align-items: start;        /* prevent stretching */
+    .brand {
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
     }
 
-    body.sidebar-collapsed .app{ grid-template-columns: var(--sidebarCollapsedW) 1fr; }
-    body.presenter .app{ grid-template-columns: 1fr; } /* presenter hides sidebar */
-
-    /* Sidebar */
-    /* Keep sidebar visible while page scrolls */
-    .sidebar{
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      border-right: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      backdrop-filter: blur(14px);
-      padding: 20px 18px;
-      overflow:auto;
-      transition: padding .18s ease;
-    }
-    body.sidebar-collapsed .sidebar{ padding: 16px 10px; }
-    body.presenter .sidebar{ display:none; }
-
-    .brand{
-      display:flex; gap:12px; align-items:center;
-      padding: 6px 6px 14px;
-      border-bottom: 1px solid var(--stroke);
-      margin-bottom: 14px;
-      justify-content:space-between;
-    }
-    .brandLeft{
-      display:flex; gap:12px; align-items:center;
-      min-width:0; flex:1;
-    }
-    .logo{
-      width:42px;height:42px;border-radius:14px;
-      background: radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0)),
-                  linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.85));
-      box-shadow: 0 10px 25px rgba(0,0,0,.18);
-      display:grid; place-items:center;
-      border: 1px solid rgba(255,255,255,.22);
-      flex: 0 0 auto;
-    }
-    body.sidebar-collapsed .logo{
-      display: none;
-    }
-    body.sidebar-collapsed .brandLeft{
-      justify-content: center;
-    }
-    .monogram{
+    .brandMark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      font-size: 16px;
-      line-height: 1;
-      color: rgba(255,255,255,.95);
-      text-shadow: 0 10px 22px rgba(0,0,0,.25);
-      user-select: none;
+      letter-spacing: 0.06em;
+      color: #fff7ee;
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      box-shadow: 0 12px 24px rgba(28, 46, 74, 0.18);
+      margin-bottom: 12px;
     }
 
-    @media (prefers-color-scheme: light){
-      .monogram{
-        color: rgba(255,255,255,.95); /* keeps strong contrast on the gradient */
-        text-shadow: 0 10px 22px rgba(10,15,30,.18);
-      }
-    }
-    .brandText{ min-width:0; }
-    .brand h1{ font-size: 14px; margin:0; line-height:1.2; letter-spacing:.2px; }
-    .brand p{ margin:2px 0 0; font-size: 12px; color: var(--muted); }
-
-    .collapseBtn{
-      all:unset; cursor:pointer;
-      width:34px;height:34px;
-      border-radius:12px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      display:grid; place-items:center;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .collapseBtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
-
-    .nav{ display:flex; flex-direction:column; gap:10px; padding-bottom: 18px; }
-    .nav button{
-      all:unset; cursor:pointer;
-      display:flex; gap:12px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid transparent;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      align-items:flex-start;
-    }
-    .nav button:hover{
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.10);
-      transform: translateY(-1px);
-    }
-    .nav button[aria-current="true"]{
-      background: linear-gradient(135deg, rgba(124,58,237,.20), rgba(6,182,212,.14));
-      border-color: rgba(124,58,237,.35);
-      box-shadow: 0 14px 32px rgba(124,58,237,.10);
-    }
-    .nav .k{
-      width:28px;height:28px;border-radius:10px;
-      display:grid;place-items:center;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      flex: 0 0 auto;
-      margin-top:1px;
-    }
-    .nav .t{ display:flex;flex-direction:column;gap:2px; min-width:0; }
-    .nav .t .title{ font-size:13px; white-space:nowrap; overflow:hidden;text-overflow:ellipsis; }
-    .nav .t .sub{
-      font-size:12px;color:var(--muted2);
-      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
-      overflow:hidden;
+    .brand h1,
+    .hero h1,
+    .sectionHeader h2,
+    .appendixHeader h2 {
+      font-family: var(--display);
+      letter-spacing: -0.03em;
     }
 
-    body.sidebar-collapsed .brandText{ display:none; }
-    body.sidebar-collapsed .nav .t{ display:none; }
-    body.sidebar-collapsed .sidebar .hint{ display:none; }
-    body.sidebar-collapsed .nav button{ justify-content:center; padding: 10px; }
-
-    .sidebar .hint{
-      border-top: 1px solid var(--stroke);
-      padding-top: 12px;
-      font-size: 12px;
-      color: var(--muted2);
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
-    }
-    .chip{
-      padding: 6px 8px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.05);
-      border-radius: 999px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .twHead{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-    }
-
-    .twBadge{
-      width: 26px;
-      height: 22px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      font-weight: 900;
-      font-size: 12px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-    }
-
-    /* Make badge match the danger theme */
-    .callout.danger .twBadge{
-      border-color: rgba(225,29,72,.28);
-      background: rgba(225,29,72,.14);
-    }
-
-    .twGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 10px;
-      margin-top: 2px;
-    }
-
-    .twItem{
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      border-radius: 14px;
-      padding: 9px 10px;
-    }
-
-    .callout.danger .twItem{
-      border-color: rgba(225,29,72,.22);
-      background: rgba(225,29,72,.08);
-    }
-
-    .twK{
-      font-weight: 900;
-      font-size: 12.5px;
-      letter-spacing: .1px;
+    .brand h1 {
+      font-size: 1.2rem;
       margin: 0;
     }
 
-    .twV{
-      margin-top: 4px; line-height: 1.3;
-      font-size: 12.5px;
+    .brand p {
+      margin: 8px 0 0;
       color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.95rem;
     }
 
-    /* Make it 1 column on narrow widths (incl. mobile) */
-    @media (max-width: 900px){
-      .twGrid{ grid-template-columns: 1fr; }
-    }
-    /* Chip rows inside callouts */
-    .calloutChips{
-      display:grid;
-      gap: 10px;
-    }
-
-    /* was: align-items: start; */
-    .calloutChipRow{
+    .toc {
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 10px;
-      align-items: center;   /* <-- change to center */
-    }
-
-    /* remove the nudge */
-    .calloutChipLabel{
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--muted);
-      padding-top: 0;        /* <-- was 3px */
-    }
-
-    .calloutChipWrap{
-      display:flex;
-      flex-wrap:wrap;
       gap: 8px;
     }
 
-    .calloutChip{
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
+    .toc a {
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid transparent;
       color: var(--muted);
-      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
     }
 
-    /* Callout tone variants */
-    .callout.danger{
-      border-color: rgba(225,29,72,.28);
-      background: linear-gradient(135deg, rgba(225,29,72,.14), rgba(249,115,22,.08));
+    .toc a:hover,
+    .toc a:focus-visible {
+      background: rgba(15, 118, 110, 0.08);
+      border-color: rgba(15, 118, 110, 0.18);
+      color: var(--ink);
+      transform: translateX(2px);
+      outline: none;
     }
 
-    /* Make chips feel a bit more “warning” inside danger callout */
-    .callout.danger .calloutChip{
-      border-color: rgba(225,29,72,.22);
-      background: rgba(225,29,72,.10);
-      color: rgba(255,255,255,.88);
+    .toc a.active {
+      background: linear-gradient(135deg, rgba(28, 46, 74, 0.1), rgba(15, 118, 110, 0.1));
+      border-color: rgba(28, 46, 74, 0.18);
+      color: var(--ink);
+      font-weight: 600;
     }
 
-
-    @media (prefers-color-scheme: light){
-      .callout.danger .calloutChip{
-        color: rgba(10,15,30,.80);
-      }
+    .sidebarTools {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
     }
 
-    /* Main */
-
-    .main{
-      overflow: visible;         /* no nested scrolling */
-      padding: 26px 22px;
-      display:flex;
-      justify-content:center;
+    .toolLabel {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
     }
-    body.presenter .main{ padding: 26px 18px; }
 
-    .deck{ width: min(100%, var(--maxW)); display:flex; gap:0; }
+    .toolRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-    /* Slide */
-    .slide{
-      width:100%;
-      border-radius: calc(var(--radius) + 6px);
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      backdrop-filter: blur(14px);
+    .modeBtn,
+    .ghostBtn {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .modeBtn:hover,
+    .ghostBtn:hover,
+    .modeBtn:focus-visible,
+    .ghostBtn:focus-visible {
+      background: rgba(15, 118, 110, 0.08);
+      border-color: rgba(15, 118, 110, 0.22);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .modeBtn.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff9f2;
+    }
+
+    .content {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .docSection,
+    .appendix {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--paper);
+      backdrop-filter: blur(16px);
       box-shadow: var(--shadow);
-      padding: var(--slidePad);
-      position:relative;
-      overflow:hidden;
-      min-height: var(--minSlideH);
-      display:flex;
-      flex-direction:column;
-      gap: 16px;
-      animation: fadeIn .18s ease both;
-    }
-    @keyframes fadeIn{ from{opacity:.65; transform: translateY(6px)} to{opacity:1; transform: translateY(0)} }
-
-    .slide::before{
-      content:"";
-      position:absolute; inset:-140px -140px auto auto;
-      width: 520px; height: 520px;
-      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,.22), transparent 55%),
-                  radial-gradient(circle at 60% 60%, rgba(6,182,212,.18), transparent 52%),
-                  radial-gradient(circle at 40% 80%, rgba(34,197,94,.12), transparent 58%);
-      opacity:.9; pointer-events:none;
-      transform: rotate(12deg);
     }
 
-    .header{
-      display:flex; gap: 16px;
-      align-items:flex-start; justify-content:space-between;
-      flex-wrap:wrap;
-      z-index:1;
-    }
-    .header .titles{ min-width: min(760px, 100%); max-width: 100%; }
-    .header h2{
-      margin:0;
-      font-size: var(--h2);
-      letter-spacing: -.35px;
-      line-height: 1.10;
-    }
-    .header p{
-      margin: 10px 0 0;
-      font-size: var(--sub);
-      color: var(--muted);
-      line-height: 1.55;
-      max-width: 86ch;
+    .hero {
+      padding: 38px;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at top right, rgba(180, 83, 9, 0.16), transparent 0 34%),
+        radial-gradient(circle at bottom left, rgba(15, 118, 110, 0.18), transparent 0 32%),
+        linear-gradient(180deg, rgba(255, 250, 243, 0.98), rgba(255, 246, 236, 0.92));
     }
 
-    .badgeRow{ display:flex; gap: 8px; flex-wrap:wrap; align-items:center; z-index:1; }
-    .badge{
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      font-size: 12px;
-      color: var(--muted);
-      display:flex; align-items:center; gap:8px;
-    }
-    .dot{ width:10px;height:10px;border-radius:50%; box-shadow:none; }
-
-    .content{
-      display:grid;
-      grid-template-columns: 1.18fr .92fr;
-      gap: 16px;
-      align-items:start;
-      z-index:1;
-      flex:1;
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -120px -120px auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(28, 46, 74, 0.08), transparent 0 64%);
+      pointer-events: none;
     }
 
-    .panel{
-      border-radius: var(--radius);
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.05);
-      padding: 16px;
+    .heroLayout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 340px);
+      gap: 24px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
     }
 
-    .rightStack{ display:grid; gap: 12px; }
-
-    .callout{
-      border-radius: var(--radius);
-      border: 1px solid rgba(34,197,94,.25);
-      background: linear-gradient(135deg, rgba(34,197,94,.14), rgba(6,182,212,.08));
-      padding: 16px;
+    .heroAside {
+      border: 1px solid rgba(28, 46, 74, 0.12);
+      border-radius: 26px;
+      padding: 20px;
+      background:
+        linear-gradient(180deg, rgba(28, 46, 74, 0.94), rgba(15, 118, 110, 0.9));
+      color: #f8f2e8;
+      box-shadow: 0 18px 34px rgba(28, 46, 74, 0.16);
     }
-    .callout h3{ margin:0 0 10px; font-size: 15px; letter-spacing:.2px; }
-    .list{
-      margin:0; padding-left: 18px;
-      color: var(--muted);
-      font-size: var(--list);
+
+    .heroAside .eyebrow {
+      color: rgba(248, 242, 232, 0.74);
+      margin-bottom: 12px;
+    }
+
+    .heroAside .eyebrow::before {
+      opacity: 0.5;
+    }
+
+    .heroAside h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 1.8rem;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .heroAside p {
+      margin: 12px 0 0;
+      color: rgba(248, 242, 232, 0.78);
       line-height: 1.65;
     }
 
-    .kv{ display:grid; gap: 8px; }
-    .kv .row{
-      display:flex; justify-content:space-between; gap: 12px;
-      padding: 9px 12px;        /* was 12px 14px */
-      border-radius: 12px;      /* slightly tighter */
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      font-size: var(--kv);
-    }
-    .kv .row .k{ color: var(--muted) }
-    .kv .row .v{ color: var(--text); font-weight: 650; }
-
-    .panel > div[style*="margin-bottom:12px"]{
-      margin-bottom: 8px !important;
-    }
-
-    /* Left: stack cards */
-    .stackCard{
-      border-radius: 16px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      padding: 14px;
-      position:relative;
-      overflow:hidden;
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-    }
-    .stackCard::after{
-      content:"";
-      position:absolute; inset:auto -40px -60px auto;
-      width:220px; height:220px;
-      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,.18), transparent 60%);
-      transform: rotate(10deg);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .icon{
-      width:36px;height:36px;border-radius:14px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid var(--stroke);
-      display:grid;place-items:center;
-      flex: 0 0 auto;
-    }
-    .stackCard h4{ margin:0; font-size: var(--cardTitle); letter-spacing:.15px; }
-    .stackCard p{ margin: 6px 0 0; font-size: var(--cardBody); color: var(--muted); line-height: 1.5; }
-
-    /* Left: cards grid (2-up) */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .heroFactList {
+      display: grid;
       gap: 12px;
+      margin: 18px 0 0;
     }
-    .card{
-      border-radius: 16px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.055);
-      padding: 14px;
-      min-height: 112px;
-      display:flex; gap: 10px;
-      align-items:flex-start;
-    }
-    .card h4{ margin:0; font-size: var(--cardTitle); letter-spacing:.15px; }
-    .card p{ margin: 6px 0 0; font-size: var(--cardBody); color: var(--muted); line-height: 1.5; }
 
-    /* Left: diagram layers */
-    .layerBox{
-      border-radius: 16px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      padding: 14px;
-      display:flex; gap: 10px;
-      align-items:flex-start;
-      position:relative;
-      overflow:hidden;
+    .heroFact {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
     }
-    .layerBox .name{ font-weight:900; letter-spacing:.2px; }
-    .layerBox .desc{ color: var(--muted); font-size: var(--cardBody); margin-top:4px; line-height:1.5; }
 
-    /* Left: TIMWOODS grid */
-    .grid2{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+    .heroFact strong {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(248, 242, 232, 0.68);
     }
-    .gridItem{
-      border-radius:16px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      padding: 12px;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-    }
-    .gridItem .k{ font-weight:900; font-size: var(--cardBody); }
-    .gridItem .v{ color: var(--muted); font-size: calc(var(--cardBody) - 0.5px); margin-top:3px; line-height:1.4; }
 
-    /* Divider slide */
-    .divider{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:left;
+    .heroFact span {
+      line-height: 1.45;
+      color: #fff8ef;
     }
-    .dividerInner{
-      width:min(100%, 960px);
-      border-radius: calc(var(--radius) + 10px);
-      border: 1px solid var(--stroke);
-      background: linear-gradient(135deg, rgba(124,58,237,.18), rgba(6,182,212,.10));
-      box-shadow: var(--shadow);
-      padding: calc(var(--slidePad) + 10px);
-      position:relative;
-      overflow:hidden;
-    }
-    .dividerInner::before{
-      content:"";
-      position:absolute;
-      inset:-160px -220px auto auto;
-      width:520px; height:520px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.20), transparent 60%);
-      transform: rotate(12deg);
-      pointer-events:none;
-    }
-    .dividerTitle{
-      font-size: clamp(30px, 3.4vw + 12px, 64px);
-      font-weight: 900;
-      letter-spacing: -.6px;
-      line-height: 1.05;
-      margin:0;
-    }
-    .dividerSub{
-      margin: 14px 0 0;
-      font-size: var(--sub);
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 70ch;
-    }
-    .dividerChips{
+
+    .heroAside .heroActions {
       margin-top: 18px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
     }
-    .dividerChip{
+
+    .heroAside .modeBtn {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: #fff8ef;
+    }
+
+    .heroAside .modeBtn:hover,
+    .heroAside .modeBtn:focus-visible {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .heroAside .modeBtn.active {
+      background: #fff8ef;
+      border-color: #fff8ef;
+      color: var(--navy);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.6;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 4.4rem);
+      line-height: 0.95;
+      max-width: 11ch;
+    }
+
+    .hero .lede {
+      margin: 18px 0 0;
+      max-width: 72ch;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+
+    .chipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 250, 243, 0.76);
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 650;
-      display:flex;
-      gap:8px;
-      align-items:center;
+      font-size: 0.9rem;
     }
-    .dividerChip .dot{ width:10px;height:10px;border-radius:50%; }
 
-    .footerNote{
+    .chipDot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    .heroActions {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .heroGrid,
+    .summaryGrid,
+    .sectionGrid,
+    .appendixGrid {
+      display: grid;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .heroGrid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .summaryGrid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sectionGrid,
+    .appendixGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel,
+    .summaryCard,
+    .sectionCard,
+    .appendixCard {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: rgba(255, 252, 247, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before,
+    .summaryCard::before,
+    .sectionCard::before,
+    .appendixCard::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--navy), var(--teal), var(--rust));
+      opacity: 0.88;
+    }
+
+    .panel h2,
+    .summaryCard h3,
+    .sectionCard h3,
+    .appendixCard h3 {
+      margin: 0;
+      font-size: 1.06rem;
+      line-height: 1.35;
+    }
+
+    .panel p,
+    .summaryCard p,
+    .sectionCard p,
+    .appendixCard p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .summaryCard {
+      padding-top: 18px;
+    }
+
+    .summaryCard::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -80px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(15, 118, 110, 0.08), transparent 0 62%);
+      pointer-events: none;
+    }
+
+    .summaryHead {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .summaryNo {
+      font-family: var(--display);
+      font-size: 2.1rem;
+      line-height: 0.85;
+      color: rgba(28, 46, 74, 0.82);
+      flex: 0 0 auto;
+    }
+
+    .summaryHead h3 {
+      margin: 2px 0 0;
+      font-size: 1.05rem;
+      line-height: 1.3;
+    }
+
+    .toneNavy {
+      border-color: rgba(28, 46, 74, 0.16);
+      background: rgba(245, 247, 251, 0.92);
+    }
+
+    .toneTeal {
+      border-color: rgba(15, 118, 110, 0.18);
+      background: rgba(241, 251, 249, 0.9);
+    }
+
+    .toneRust {
+      border-color: rgba(180, 83, 9, 0.2);
+      background: rgba(255, 248, 238, 0.92);
+    }
+
+    .toneOlive {
+      border-color: rgba(85, 107, 47, 0.2);
+      background: rgba(246, 249, 240, 0.92);
+    }
+
+    .toneBerry {
+      border-color: rgba(159, 18, 57, 0.16);
+      background: rgba(255, 244, 247, 0.92);
+    }
+
+    .docSection,
+    .appendix {
+      padding: 30px;
+    }
+
+    .sectionHeader,
+    .appendixHeader {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 12px 18px;
+      margin-bottom: 24px;
+    }
+
+    .sectionHeader > div:first-child,
+    .appendixHeader > div:first-child {
+      min-width: 0;
+    }
+
+    .sectionHeader h2,
+    .appendixHeader h2 {
+      margin: 0;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      line-height: 1;
+    }
+
+    .sectionHeader p,
+    .appendixHeader p {
+      grid-column: 1 / -1;
+      margin: 0;
+      max-width: none;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .audience {
+      grid-column: 2;
+      justify-self: end;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .audience span {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(23, 32, 51, 0.06);
+      color: var(--muted);
+      font-size: 0.85rem;
+      border: 1px solid var(--line);
+    }
+
+    .sectionMeta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .sectionMeta li {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.55);
+      font-size: 0.82rem;
+    }
+
+    .visualModel {
+      margin-bottom: 22px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at top right, rgba(15, 118, 110, 0.08), transparent 0 30%),
+        linear-gradient(180deg, rgba(255, 251, 245, 0.96), rgba(251, 247, 239, 0.9));
+      box-shadow: 0 14px 30px rgba(23, 32, 51, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visualModel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--navy), var(--teal), var(--rust));
+    }
+
+    .visualModelHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .visualModelHeader h3 {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1.2;
+    }
+
+    .visualModelHeader p {
+      margin: 8px 0 0;
+      max-width: 58ch;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .modelGrid3,
+    .modelGrid4 {
+      display: grid;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .modelGrid3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .modelGrid4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .modelCard {
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .modelCard h4 {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.25;
+    }
+
+    .modelCard p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .modelChipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .modelChip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .modelArrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--muted);
+      font-size: 1.4rem;
+      opacity: 0.66;
+    }
+
+    .capacityRail {
+      display: flex;
+      gap: 10px;
       margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted2);
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      z-index:1;
+      position: relative;
+      z-index: 1;
     }
-    body.presenter .footerNote{ display:none; }
 
-    /* Presenter floating controls */
-    .presenterBar{
-      position: fixed;
-      bottom: 16px;
-      left: calc((100vw + var(--sidebarW)) / 2);
-      transform: translateX(-50%);
-      z-index: 1000;
-      display:flex;
-      gap: 10px;
-      align-items:center;
+    .capacitySegment {
+      min-height: 118px;
+      padding: 16px 14px;
+      border-radius: 20px;
+      color: #fffaf3;
+      display: grid;
+      align-content: space-between;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
-    body.sidebar-collapsed .presenterBar{
-      left: calc((100vw + var(--sidebarCollapsedW)) / 2);
-    }
-    body.presenter .presenterBar{
-      left: 50%;
-    }
-    .pbtn{
-      cursor:pointer;
-      border-radius: 14px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,255,255,.08);
-      backdrop-filter: blur(12px);
-      padding: 10px 12px;
-      color: var(--text);
-      display:flex; align-items:center; gap:8px;
-      box-shadow: var(--shadow);
-      user-select:none;
-      transition: transform .12s ease, background .12s ease;
-    }
-    .pbtn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.12); }
-    .pbtn.secondary{ background: rgba(255,255,255,.06); color: var(--muted); }
-    .pbtn small{ color: var(--muted2); font-weight: 650; }
 
-    /* Mobile drawer */
-    .hamburger{ display:none; }
-    .overlay{ display:none; }
+    .capacitySegment strong {
+      font-family: var(--display);
+      font-size: 2rem;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+    }
 
-    @media (max-width: 900px){
-      body{ overflow:auto; }
-      .app{ grid-template-columns: 1fr; }
-      body.presenter .sidebar{ display:block; } /* presenter on mobile uses drawer */
-      body.presenter .app{ grid-template-columns: 1fr; }
+    .capacitySegment span {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 250, 243, 0.72);
+    }
 
-      .sidebar{
-        position: fixed;
-        top:0; left:0; bottom:0;
-        width: min(92vw, var(--sidebarW));
-        transform: translateX(-105%);
-        transition: transform .18s ease;
-        z-index: 50;
+    .capacitySegment p {
+      margin: 12px 0 0;
+      line-height: 1.45;
+      color: rgba(255, 250, 243, 0.88);
+    }
+
+    .capacity70 { flex: 7 1 0; background: linear-gradient(180deg, var(--teal), #0b5f58); }
+    .capacity15a { flex: 1.5 1 0; background: linear-gradient(180deg, var(--navy), #253754); }
+    .capacity15b { flex: 1.5 1 0; background: linear-gradient(180deg, var(--rust), #96470b); }
+
+    .modelFoot {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px dashed rgba(23, 32, 51, 0.18);
+      background: rgba(255, 255, 255, 0.56);
+      color: var(--muted);
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .list,
+    .compactList {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .compactList {
+      margin-top: 10px;
+      font-size: 0.96rem;
+    }
+
+    .detailBlock {
+      margin-top: 18px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 251, 245, 0.72);
+      padding: 0 18px;
+    }
+
+    details + details {
+      margin-top: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 0;
+      font-weight: 600;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    .detailBody {
+      padding: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .detailBody h4 {
+      margin: 14px 0 6px;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    .metricTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .metricTable th,
+    .metricTable td {
+      text-align: left;
+      vertical-align: top;
+      padding: 12px 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .metricTable th {
+      color: var(--ink);
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .metricTable td strong {
+      color: var(--ink);
+    }
+
+    .footerNote {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .summary-mode .audience,
+    .summary-mode .sectionMeta {
+      display: none;
+    }
+
+    .summary-mode .detailBlock,
+    .summary-mode .appendixOnly {
+      display: none;
+    }
+
+    .full-mode .detailBlock,
+    .full-mode .appendixOnly {
+      display: block;
+    }
+
+    .visuallyMuted {
+      color: var(--muted);
+    }
+
+    @media (max-width: 1120px) {
+      .layout {
+        grid-template-columns: 1fr;
       }
-      .sidebar.open{ transform: translateX(0); }
 
-      .overlay{
-        display:block;
-        position: fixed; inset:0;
-        background: rgba(0,0,0,.45);
-        z-index: 40;
-        opacity: 0;
-        pointer-events:none;
-        transition: opacity .18s ease;
+      .sidebar {
+        position: static;
+        max-height: none;
       }
-      .overlay.show{ opacity: 1; pointer-events:auto; }
-
-      .main{ padding: 16px 14px; }
-      .content{ grid-template-columns: 1fr; }
-      .cards{ grid-template-columns: 1fr; }
-      .grid2{ grid-template-columns: 1fr; }
-      .slide{ min-height: 820px; padding: 20px; }
-
-      .hamburger{
-        display:inline-flex;
-        position: fixed;
-        left: 14px;
-        top: 14px;
-        z-index: 60;
-        cursor:pointer;
-        border-radius: 14px;
-        border: 1px solid var(--stroke);
-        background: rgba(255,255,255,.08);
-        backdrop-filter: blur(10px);
-        padding: 10px 12px;
-        color: var(--text);
-        box-shadow: var(--shadow);
-        gap:8px;
-        align-items:center;
-      }
-
-      /* disable collapsed mode on mobile */
-      body.sidebar-collapsed .brandText{ display:block; }
-      body.sidebar-collapsed .nav .t{ display:flex; }
-      body.sidebar-collapsed .sidebar .hint{ display:flex; }
-
-      .presenterBar{ bottom: 12px; left: 50%; }
-      body.sidebar-collapsed .presenterBar{ left: 50%; }
     }
 
-    :focus-visible{
-      outline: 3px solid rgba(124,58,237,.55);
-      outline-offset: 3px;
-      border-radius: 12px;
+    @media (max-width: 840px) {
+      .hero,
+      .docSection,
+      .appendix {
+        padding: 22px;
+      }
+
+      .heroLayout {
+        grid-template-columns: 1fr;
+      }
+
+      .heroGrid,
+      .summaryGrid,
+      .sectionGrid,
+      .appendixGrid,
+      .modelGrid3,
+      .modelGrid4 {
+        grid-template-columns: 1fr;
+      }
+
+      .capacityRail {
+        flex-direction: column;
+      }
+
+      .hero h1 {
+        max-width: none;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .layout {
+        width: 100%;
+        display: block;
+        padding: 0;
+      }
+
+      .sidebar,
+      .heroActions,
+      .sidebarTools {
+        display: none;
+      }
+
+      .hero,
+      .docSection,
+      .appendix {
+        box-shadow: none;
+        border: 1px solid #d5dbe5;
+        background: #ffffff;
+        break-inside: avoid;
+        margin: 0 0 18px;
+      }
+
+      .summary-mode .detailBlock,
+      .summary-mode .appendixOnly {
+        display: block;
+      }
     }
   </style>
 </head>
-
-<body>
-  <div class="overlay" id="overlay" aria-hidden="true"></div>
-
-  <button class="hamburger" id="hamburger" aria-label="Open navigation">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-    Menu
-  </button>
-
-  <div class="presenterBar" aria-label="Presenter controls">
-    <button class="pbtn secondary" id="prevBtn" title="Previous (← / K)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Prev
-    </button>
-    <button class="pbtn secondary" id="nextBtn" title="Next (→ / J)">
-      Next
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-    <button class="pbtn" id="presenterToggle" title="Toggle Presenter Mode (P)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      Presenter
-      <small id="presenterState">OFF</small>
-    </button>
-  </div>
-
-  <div class="app">
-    <aside class="sidebar" id="sidebar" aria-label="Slide navigation">
+<body class="summary-mode">
+  <div class="layout">
+    <aside class="sidebar">
       <div class="brand">
-        <div class="brandLeft">
-          <div class="logo" aria-hidden="true">
-            <span class="monogram">WQ</span>
-          </div>
-          <div class="brandText">
-            <h1>Engineering Deck</h1>
-            <p>Wayne Quinlivan-Smith</p>
-          </div>
-        </div>
-
-        <button class="collapseBtn" id="collapseBtn" aria-label="Collapse sidebar" title="Collapse sidebar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <div class="brandMark">WQ</div>
+        <h1>Engineering Leadership Handbook</h1>
+        <p>A single-page guide to how I organise engineering: clear expectations for teams, visible trade-offs for leadership, and a lean system of work for delivery.</p>
       </div>
 
-      <nav class="nav" id="nav"></nav>
+      <nav class="toc" id="toc">
+        <a href="#top">Overview</a>
+        <a href="#executive-summary">Executive Summary</a>
+        <a href="#leadership-thesis">Leadership Thesis</a>
+        <a href="#north-star">North Star</a>
+        <a href="#system-of-work">System of Work</a>
+        <a href="#team-design">Team Design</a>
+        <a href="#run-vs-change">Run vs Change</a>
+        <a href="#planning">Planning</a>
+        <a href="#engineering-excellence">Engineering Excellence</a>
+        <a href="#platform-and-paved-road">Platform and Paved Road</a>
+        <a href="#modernisation">Modernisation</a>
+        <a href="#ai-in-engineering">AI in Engineering</a>
+        <a href="#governance">Governance and Scorecard</a>
+        <a href="#first-90-days">First 90 Days</a>
+        <a href="#steady-state">Steady State</a>
+        <a href="#appendices">Appendices</a>
+      </nav>
 
-      <div class="hint">
-        <div style="display:flex; gap:6px; flex-wrap:wrap">
-          <span class="chip">← →</span>
-          <span class="chip">J / K</span>
-          <span class="chip">P</span>
-          <span class="chip">Ctrl/Cmd+B</span>
+      <div class="sidebarTools">
+        <div class="toolLabel">Reading mode</div>
+        <div class="toolRow">
+          <button class="modeBtn active" data-mode="summary" type="button">Quick Read</button>
+          <button class="modeBtn" data-mode="full" type="button">Full Reference</button>
         </div>
-        <span class="chip" id="progressChip">1 / N</span>
+        <div class="toolLabel">Detail controls</div>
+        <div class="toolRow">
+          <button class="ghostBtn" id="expandAll" type="button">Open all details</button>
+          <button class="ghostBtn" id="collapseAll" type="button">Close details</button>
+        </div>
       </div>
     </aside>
 
-    <main class="main">
-      <div class="deck">
-        <section class="slide" id="slide" aria-live="polite"></section>
-      </div>
+    <main class="content">
+      <header class="hero" id="top">
+        <div class="heroLayout">
+          <div>
+            <div class="eyebrow">Leadership approach</div>
+            <h1>Leading engineering through change with stability.</h1>
+            <p class="lede">This is the leadership approach I use to make delivery more predictable, reliability more intentional, and modernisation more continuous, while giving teams clear expectations and leadership a visible basis for trade-offs, progress, and risk.</p>
+            <div class="chipRow">
+              <span class="chip" style="color: var(--teal);"><span class="chipDot"></span>Trust and predictability</span>
+              <span class="chip" style="color: var(--navy);"><span class="chipDot"></span>Lean system of work</span>
+              <span class="chip" style="color: var(--rust);"><span class="chipDot"></span>Reliable delivery</span>
+              <span class="chip" style="color: var(--olive);"><span class="chipDot"></span>Continuous modernisation</span>
+            </div>
+          </div>
+          <aside class="heroAside">
+            <div class="eyebrow">Reading modes</div>
+            <h2>Two ways to use this page.</h2>
+            <p>Use the page as a quick overview, a leadership reference, or a team operating guide.</p>
+            <div class="heroFactList">
+              <div class="heroFact">
+                <strong>Quick Read</strong>
+                <span>Principles, posture, and the core operating promise.</span>
+              </div>
+              <div class="heroFact">
+                <strong>Full Reference</strong>
+                <span>Expectations, decision rules, cadence, governance, and appendices.</span>
+              </div>
+            </div>
+            <div class="heroActions">
+              <button class="modeBtn active" data-mode="summary" type="button">Quick Read</button>
+              <button class="modeBtn" data-mode="full" type="button">Full Reference</button>
+            </div>
+          </aside>
+        </div>
+        <div class="heroGrid">
+          <article class="panel toneTeal">
+            <h2>Who this is for</h2>
+            <p>Teams who want clear expectations, managers who want visibility into how engineering is run, and peers who need to understand where I standardise, where I decentralise, and how I make trade-offs.</p>
+          </article>
+          <article class="panel toneNavy">
+            <h2>How to read it</h2>
+            <p>Use Quick Read for the summary. Use Full Reference for the operating detail, decision rules, governance mechanics, and appendices behind it.</p>
+          </article>
+          <article class="panel toneRust">
+            <h2>Core promise</h2>
+            <p>Transformation should not come at the expense of stability, and stability should not be used as a reason to avoid change. The system has to support both at the same time.</p>
+          </article>
+        </div>
+      </header>
+
+      <section class="docSection" id="executive-summary">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Summary</div>
+            <h2>Executive Summary</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Management</span>
+            <span>Peers</span>
+          </div>
+          <p>The short version of the model: the principles, mechanics, and expectations that shape how I run engineering.</p>
+        </div>
+        <div class="summaryGrid">
+          <article class="summaryCard toneNavy">
+            <div class="summaryHead">
+              <span class="summaryNo">1</span>
+              <h3>Change with stability</h3>
+            </div>
+            <p>Reliable delivery, operational trust, engineering quality, and modernisation progress are not separate agendas. They are one system and should be managed as such.</p>
+          </article>
+          <article class="summaryCard toneTeal">
+            <div class="summaryHead">
+              <span class="summaryNo">2</span>
+              <h3>Durable decision rules</h3>
+            </div>
+            <p>Outcomes, reliability, security, quality, ownership, and psychological safety are used as trade-off setters when priorities clash.</p>
+          </article>
+          <article class="summaryCard toneRust">
+            <div class="summaryHead">
+              <span class="summaryNo">3</span>
+              <h3>Lean mechanics over theatre</h3>
+            </div>
+            <p>Small batches, pull-based flow, WIP discipline, visible constraints, safety rails, and continuous improvement create predictability without adding ceremony.</p>
+          </article>
+          <article class="summaryCard toneOlive">
+            <div class="summaryHead">
+              <span class="summaryNo">4</span>
+              <h3>Team design matters</h3>
+            </div>
+            <p>Durable stream-aligned teams with clear ownership and low-friction collaboration deliver more reliably than structures built around handoffs.</p>
+          </article>
+          <article class="summaryCard toneBerry">
+            <div class="summaryHead">
+              <span class="summaryNo">5</span>
+              <h3>Quality is built in</h3>
+            </div>
+            <p>SLOs, observability, release safety, incident learning, and explicit standards are how speed becomes sustainable rather than fragile.</p>
+          </article>
+          <article class="summaryCard toneTeal">
+            <div class="summaryHead">
+              <span class="summaryNo">6</span>
+              <h3>Modernise in slices</h3>
+            </div>
+            <p>Use the paved road, budget tech debt deliberately, and apply AI with guardrails to remove toil, improve quality, and build capability safely.</p>
+          </article>
+        </div>
+        <p class="footerNote">Each point below expands into a fuller operating section with expectations, cadences, measures, and failure modes.</p>
+      </section>
+
+      <section class="docSection" id="leadership-thesis">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Operating guide</div>
+            <h2>Leadership Thesis</h2>
+          </div>
+          <div class="audience">
+            <span>Managers</span>
+            <span>Teams</span>
+          </div>
+          <p>The leadership frame is straightforward: improve throughput, quality, resilience, and ownership together, and make the trade-offs visible instead of leaving them implicit.</p>
+        </div>
+        <ul class="sectionMeta">
+          <li>Purpose and outcomes</li>
+          <li>Governance without ceremony</li>
+          <li>Trade-off clarity</li>
+        </ul>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>What this means</h3>
+            <p>I treat engineering as a system of work, not just a collection of projects. The job is to improve throughput, quality, resilience, and ownership together, and to make the trade-offs visible. The aim is an organisation that can change direction, ship safely, and absorb operational reality without thrash.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>What teams can expect</h3>
+            <p>Clear direction, explicit quality and reliability expectations, and a bias toward removing structural friction instead of asking people to work harder inside a broken system. Teams should expect me to challenge hidden queues, unclear ownership, excessive parallel work, and avoidable toil.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>What management can expect</h3>
+            <p>Transparent progress, evidence-based prioritisation, visible risk management, and a lightweight governance rhythm focused on trade-offs, constraints, and course correction. Management should expect direct communication when reliability, capacity, or estate health require a change in plan.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>What success looks like</h3>
+            <p>Delivery becomes more predictable. Incident recurrence falls. The estate gets easier to change. Teams spend less time on avoidable rework, handoffs, and firefighting. Planning conversations become more honest because uncertainty, risk, and operational load are visible.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Purpose and stance</summary>
+            <div class="detailBody">
+              <h4>Purpose</h4>
+              <p>This is not a manifesto or a process library. It is an operating reference: the principles, behaviours, controls, and cadences that shape how engineering works under my leadership.</p>
+              <h4>Leadership stance</h4>
+              <ul class="list">
+                <li>I usually arrive to some mix of scattered ownership, hidden operational load, too much WIP, fragile delivery, and legacy drag.</li>
+                <li>I do not optimise for cosmetic process compliance, 100 percent utilisation, false certainty, or local speed at the expense of system health.</li>
+                <li>My default leadership style is clear expectations, direct trade-offs, and a preference for measurement plus observation over assumption.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Leadership commitments</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>I will not treat roadmap pressure as a reason to ignore reliability or quality signals.</li>
+                <li>I will not ask teams to absorb chronic system problems through unsustainable effort.</li>
+                <li>I will use measurement to inform decisions, not to create performative dashboards with no consequence.</li>
+                <li>I will expect teams and managers to surface uncomfortable reality early, and I will try to reward that behaviour rather than punish it.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="north-star">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Decision rules</div>
+            <h2>Engineering North Star</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Peers</span>
+            <span>Management</span>
+          </div>
+          <p>The North Star is a small set of durable decision rules. It exists to make priorities legible when speed, reliability, security, quality, and ownership pull in different directions.</p>
+        </div>
+        <div class="visualModel">
+          <div class="visualModelHeader">
+            <div>
+              <h3>Principles become decisions, then decisions become evidence.</h3>
+              <p>The North Star matters only if it changes what teams do, what leaders approve, and what the scorecard shows.</p>
+            </div>
+          </div>
+          <div class="modelGrid3">
+            <div class="modelCard toneNavy">
+              <h4>1. Principles</h4>
+              <div class="modelChipRow">
+                <span class="modelChip">Outcomes</span>
+                <span class="modelChip">Reliability</span>
+                <span class="modelChip">Security</span>
+                <span class="modelChip">Quality</span>
+                <span class="modelChip">Evolutionary architecture</span>
+                <span class="modelChip">Psychological safety</span>
+                <span class="modelChip">Ownership</span>
+              </div>
+            </div>
+            <div class="modelCard toneTeal">
+              <h4>2. Decision questions</h4>
+              <div class="modelChipRow">
+                <span class="modelChip">Is trust at risk?</span>
+                <span class="modelChip">Is this safe to change?</span>
+                <span class="modelChip">Who owns it?</span>
+                <span class="modelChip">Does this preserve optionality?</span>
+                <span class="modelChip">Can risk be raised early?</span>
+              </div>
+            </div>
+            <div class="modelCard toneRust">
+              <h4>3. Evidence</h4>
+              <div class="modelChipRow">
+                <span class="modelChip">Journey metrics</span>
+                <span class="modelChip">Error budget</span>
+                <span class="modelChip">CFR and MTTR</span>
+                <span class="modelChip">Ownership coverage</span>
+                <span class="modelChip">Time to right owner</span>
+              </div>
+            </div>
+          </div>
+          <div class="modelFoot">If the principles do not change a prioritisation call, a release decision, or a stabilisation call, they are not yet operating rules.</div>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>Principles to keep</h3>
+            <p>The seven principles matter because they are usable. They need to read as rules that can be referenced in real decisions, not as values that only sound good in a document.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>How they guide decisions</h3>
+            <p>Each principle should improve a real trade-off. It should tell us what to protect, what to question, and what evidence matters when priorities collide. If it never changes a release, backlog, or stabilisation call, it is not yet doing useful work.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Expectations for teams</h3>
+            <p>Teams should be able to explain how these principles shaped backlog choices, release safety, operational decisions, and architecture decisions. They should be able to point to a recent example of each principle in practice.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>Expectations for management</h3>
+            <p>Management should see the principles reflected in trade-off calls, not just in language. The document should make those calls legible across quarters so it is clear why work is delayed, stopped, or accelerated.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>North Star as explicit operating rules</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li><strong>Outcomes over output:</strong> Roadmaps and reviews should discuss movement in customer or business measures, not just completed activity.</li>
+                <li><strong>Reliability is a feature:</strong> Reliability work is product work when trust is at risk.</li>
+                <li><strong>Secure by design:</strong> Security controls should be embedded in delivery flow rather than bolted on at release time.</li>
+                <li><strong>Quality is built in:</strong> A team is not done when coding is done; it is done when the change is safe to operate and support.</li>
+                <li><strong>Evolutionary architecture:</strong> We prefer decisions that preserve optionality and reduce future change cost.</li>
+                <li><strong>Psychological safety:</strong> People must be able to surface risk, uncertainty, and failure without fear of blame.</li>
+                <li><strong>Clear ownership and accountability:</strong> Every critical area should have a team that can decide, act, and be found quickly.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Trade-off scenarios</summary>
+            <div class="detailBody">
+              <h4>Speed vs reliability</h4>
+              <p>If reliability signals are red, new feature delivery slows until the service is back inside an acceptable operating envelope. This is not optional and should be visible in quarterly reviews.</p>
+              <h4>Autonomy vs standardisation</h4>
+              <p>Teams keep autonomy on product decisions and local implementation choices, but they adopt common safety rails, observability standards, and paved-road defaults unless they can justify a different path.</p>
+              <h4>Urgency vs evidence</h4>
+              <p>Strategic urgency does not remove the need for thin slices, staged rollout, and validation. It changes the speed of feedback loops, not the need for them.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="system-of-work">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Execution model</div>
+            <h2>Lean System of Work</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Engineering managers</span>
+          </div>
+          <p>This is how work moves: small batches, visible queues, pull where possible, explicit constraints, and regular improvement loops. The goal is less waiting, less thrash, and more predictable delivery.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>What good looks like</h3>
+            <p>Small batches move with visible status, limited WIP, fast feedback, and fewer queues. Constraints are surfaced quickly and dealt with directly. Work ages slowly because teams are finishing more and starting less.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>What I expect from teams</h3>
+            <p>Use pull-based intake where possible, make interrupt work visible, swarm bottlenecks, and close the loop on retrospectives with concrete actions. Teams should challenge large batches, unclear ready states, and work that sits blocked without intervention.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>What I will do as leader</h3>
+            <p>I will look for structural waste, not just local productivity: review queues, dependency delays, environment friction, approval bottlenecks, unclear ownership, and repetitive failure demand. When the system creates the same pain repeatedly, I treat that as a leadership problem.</p>
+          </article>
+          <article class="sectionCard toneBerry">
+            <h3>Signals</h3>
+            <ul class="compactList">
+              <li>Batch size down</li>
+              <li>Queue time down</li>
+              <li>Aging WIP down</li>
+              <li>Rework and defects down</li>
+              <li>Predictability up</li>
+            </ul>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Day-to-day operating rules</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Do not continue starting new work while older work is aging, blocked, or waiting for attention.</li>
+                <li>Make queue time visible, not just active work time, because the queue usually explains the delay.</li>
+                <li>Escalate dependency and approval bottlenecks as system constraints, not just local frustrations.</li>
+                <li>Prefer improving the path of work over adding another tracking meeting around it.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>TIMWOODS catalogue and how to use it</summary>
+            <div class="detailBody">
+              <p>Keep TIMWOODS as an explicit anti-list. It is a useful lens for identifying why work is slow or fragile without immediately blaming teams.</p>
+              <ul class="list">
+                <li><strong>Transportation:</strong> Handoffs, ticket ping-pong, and context loss.</li>
+                <li><strong>Inventory:</strong> Too much WIP, hidden queues, and half-finished initiatives.</li>
+                <li><strong>Motion:</strong> Tool friction, manual steps, and constant switching.</li>
+                <li><strong>Waiting:</strong> Reviews, approvals, dependencies, and environment delays.</li>
+                <li><strong>Overproduction:</strong> Building more scope before demand is validated.</li>
+                <li><strong>Overprocessing:</strong> Heavy ceremony, duplicate artefacts, and unnecessary governance.</li>
+                <li><strong>Defects:</strong> Escaped bugs, regressions, and failure demand.</li>
+                <li><strong>Skills:</strong> Silos, bottlenecks, and single points of failure.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Operating rituals</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Visible weekly review of WIP, queue age, and blocked work.</li>
+                <li>Focused constraint discussion, not status theatre.</li>
+                <li>Retrospectives with tracked actions and named owners.</li>
+                <li>Regular go-see habits: observe real delivery paths, operational pain, and customer-impacting journeys.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="team-design">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Organisation</div>
+            <h2>Team Design and Ownership</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Managers</span>
+            <span>Peers</span>
+          </div>
+          <p>Team design is a control surface. It shapes cognitive load, coordination cost, ownership clarity, and delivery speed. The aim is durable teams, explicit ownership, and collaboration by choice rather than by default handoff.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>Preferred team model</h3>
+            <p>A small number of durable stream-aligned teams own outcomes end to end for clear domains or journeys. Enabling and micro-platform capability exists to remove friction and create self-service, not another queue. Team design should lower cognitive load and coordination cost by default.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>Ownership standard</h3>
+            <p>Every critical service should have a named owner, runbook status, on-call path, and clear escalation route. Ownership should include build, run, and improvement responsibility. If a team owns a service, it also owns the operational and architectural consequences of that service.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Interaction modes</h3>
+            <p>Default to service relationships and self-service enablement. Use collaboration deliberately and time-box it. Use facilitating mode when a team needs coaching to build its own capability. Long-lived collaboration without an exit path usually means boundaries or ownership are unclear.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>Manager accountability</h3>
+            <p>Managers are accountable for team health, capability growth, operational load management, and risk visibility, not only delivery pacing. A team with unclear boundaries, constant interrupts, or poor ownership clarity is a management issue as much as a team issue.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Decision rights</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Service-owning teams should be able to make routine delivery and operational decisions without excessive central approval.</li>
+                <li>Architecture review should be used for consequential change, shared patterns, and risk-heavy decisions, not as a gate on routine work.</li>
+                <li>Platform and enablement functions should define standards and support adoption, but not absorb all ownership for outcomes they do not control.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Ownership made explicit</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>The definition of team ownership: product outcomes, code, runtime health, operational readiness, documentation, and lifecycle care.</li>
+                <li>What counts as a healthy interface between teams: contracts, shared measures, service expectations, and clear turnaround standards.</li>
+                <li>What an engineering manager is accountable for beyond delivery: team health, capability growth, operational load management, and risk visibility.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="run-vs-change">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Capacity and focus</div>
+            <h2>Run vs Change</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Managers</span>
+          </div>
+          <p>Operational work has to be visible and funded, otherwise reliability and delivery compete in unhealthy ways. The model below is a default planning stance, with explicit triggers for when teams shift toward stabilisation.</p>
+        </div>
+        <div class="visualModel">
+          <div class="visualModelHeader">
+            <div>
+              <h3>Default capacity shape</h3>
+              <p>The default mix protects roadmap progress, operational response, and deliberate system improvement at the same time.</p>
+            </div>
+          </div>
+          <div class="capacityRail">
+            <div class="capacitySegment capacity70">
+              <div>
+                <span>Change</span>
+                <strong>70%</strong>
+              </div>
+              <p>Outcome work, thin slices, validated delivery, and product change.</p>
+            </div>
+            <div class="capacitySegment capacity15a">
+              <div>
+                <span>Run / response</span>
+                <strong>15%</strong>
+              </div>
+              <p>Incidents, support, on-call, BAU, and urgent operational work.</p>
+            </div>
+            <div class="capacitySegment capacity15b">
+              <div>
+                <span>Run / improve</span>
+                <strong>15%</strong>
+              </div>
+              <p>Debt reduction, toil removal, reliability uplift, and automation.</p>
+            </div>
+          </div>
+          <div class="modelFoot">When error budget burn, repeat incidents, or interrupt load go red, capacity moves toward stability first. The model is a default stance, not a fixed quota.</div>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>Default model</h3>
+            <p>Use a default allocation across change, response, and improvement so operational demand is visible and funded. Treat the split as a planning heuristic that adjusts for service risk, maturity, and current reliability signals. The point is to protect capacity for work that usually gets crowded out.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>What teams should do</h3>
+            <p>Track interrupts, protect focus, keep response work visible, and reserve deliberate capacity for toil reduction, maintenance, debt, and reliability improvement. Teams should know at any given time what is planned change, operational response, and deliberate improvement.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Stabilise-first triggers</h3>
+            <p>When incident trend, recurring failure, error budget burn, or customer-impacting instability move into a red zone, teams shift capacity toward stability until the system is back under control. That decision should be visible and explained, not negotiated every time as though it were a surprise.</p>
+          </article>
+          <article class="sectionCard toneBerry">
+            <h3>What management should understand</h3>
+            <p>High utilisation is usually the enemy of predictability. If teams have no slack for response, improvement, or rework, delivery becomes more fragile and plans become less reliable, not more ambitious.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Default policy</summary>
+            <div class="detailBody">
+              <p>The starting model is approximately 70 percent change, 15 percent response, and 15 percent improvement. Some teams will run a different mix because of service criticality, maturity, or inherited operational burden. The operating principle is to make that reality explicit and managed, not to pretend every team has identical capacity for roadmap work.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Operating policy details</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Who decides when capacity is reallocated and how quickly that should show up in plans.</li>
+                <li>How on-call, support, BAU, compliance, and reliability maintenance are classified.</li>
+                <li>How teams report interrupt load and toil in a way that management can actually act on.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Failure modes</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>100 percent utilisation presented as efficiency.</li>
+                <li>Invisible interrupt load distorting roadmap delivery.</li>
+                <li>Heroic firefighting normalised as commitment.</li>
+                <li>Improvement work repeatedly deferred until reliability debt becomes acute.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="planning">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Strategy into delivery</div>
+            <h2>Planning and Prioritisation</h2>
+          </div>
+          <div class="audience">
+            <span>Management</span>
+            <span>Product and engineering</span>
+            <span>Teams</span>
+          </div>
+          <p>Planning connects company direction to team-level execution. It should preserve line of sight, make uncertainty explicit, and keep delivery decisions tied to outcomes rather than activity.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>Planning horizons</h3>
+            <p>Annual objectives set direction. Quarterly planning chooses the bets most likely to move the right measures. Teams then break those bets into thin slices, experiments, and staged rollouts without pretending uncertainty has disappeared on the way down.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>Estimation philosophy</h3>
+            <p>Estimate to support decisions about risk, sequencing, dependencies, and confidence. Prefer ranges and assumptions over false precision. Use estimates to improve planning quality, not to create an illusion of certainty.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>What teams should expect</h3>
+            <p>Evidence matters. Discovery and validation are part of delivery. Plans should be revisited when new learning changes the shape or value of the work. Teams should be able to explain why a slice is the right next slice.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>What management should expect</h3>
+            <p>A clearer line of sight from company goals to engineering work, plus explicit communication of uncertainty, trade-offs, and confidence. Management should see both the intended outcomes and the assumptions behind them.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Planning rules</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Translate annual objectives into a small number of quarterly outcome bets with named measures.</li>
+                <li>Plan the next slice that can produce learning or value, not the entire theoretical scope upfront.</li>
+                <li>Revisit plans when evidence changes, not only when a fixed review date arrives.</li>
+                <li>Keep dependencies visible and actively managed rather than burying them inside delivery optimism.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Estimation in practice</summary>
+            <div class="detailBody">
+              <p>Estimation is a decision-support tool. It helps us understand sequencing, confidence, cost of delay, dependency risk, and whether a slice is too large to manage safely. We use it to improve planning conversations, not to score teams.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Planning structure</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Annual objectives and engineering translation.</li>
+                <li>Quarterly business review inputs, outputs, and decision points.</li>
+                <li>How bets become thin slices and experiments.</li>
+                <li>How rolling forecasts are maintained.</li>
+                <li>What not to do: big commitments without validation, roadmap certainty theatre, and using story points as a performance measure.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="engineering-excellence">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Minimum standards</div>
+            <h2>Engineering Excellence</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Managers</span>
+          </div>
+          <p>This chapter defines the baseline for safe, supportable engineering. Quality, reliability, observability, release safety, and incident learning are not optional extras; they are part of how engineering work is judged complete.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>Reliability and operability</h3>
+            <p>Critical journeys should have defined SLOs, observability that maps to real user behaviour, meaningful alerts, and runbooks that support fast recovery. A service that cannot be understood or recovered under pressure is not production-ready no matter how complete the feature set looks.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>Quality built in</h3>
+            <p>The definition of done should cover testing, observability, maintainability, security, release readiness, and review standards. Quality is not a late phase and not a separate team. It is the set of controls and behaviours that keep throughput from turning into rework.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Safe change</h3>
+            <p>Use standard CI and CD safety rails: tests, security checks, progressive delivery, rollback readiness, and traceable changes. Manual gates should be the exception, not the main control mechanism. If safe change depends mainly on heroics or memory, the system is not mature enough.</p>
+          </article>
+          <article class="sectionCard toneBerry">
+            <h3>Incident learning</h3>
+            <p>Run blameless reviews focused on system fixes, follow-through, and recurrence reduction. The goal is a stronger system, not a tidier narrative. Repeated incident themes should trigger operational and prioritisation changes, not just better write-ups.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Minimum standards</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>What counts as a critical journey and when it needs an SLO.</li>
+                <li>Minimum observability expectations for new and materially changed services.</li>
+                <li>Release safety expectations: rollout, rollback, and support readiness.</li>
+                <li>What incident review follow-through looks like and who tracks it.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Definition of done checklist</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Relevant automated tests and quality checks pass.</li>
+                <li>Operational impact is understood and observable.</li>
+                <li>Security and privacy expectations are met.</li>
+                <li>Rollback or mitigation path is known.</li>
+                <li>Documentation and runbook impact are updated where needed.</li>
+                <li>Ownership is clear after release, not only before it.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Failure modes</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Observability added after release rather than designed in.</li>
+                <li>Incident actions agreed but not tracked to completion.</li>
+                <li>Manual approvals compensating for weak delivery controls.</li>
+                <li>Quality discussions reduced to bug counts instead of system capability.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="platform-and-paved-road">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Enablement</div>
+            <h2>Platform and Paved Road</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Platform or enablement functions</span>
+            <span>Management</span>
+          </div>
+          <p>The paved road exists to remove friction from the system. It defines the safe defaults, reusable standards, and self-service capabilities that let teams move quickly without rebuilding the same controls repeatedly.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>What the paved road is for</h3>
+            <p>The paved road makes the safe and supported path the easiest path. It should reduce local setup burden, shorten onboarding, and raise the default quality bar. Teams should feel that adopting it saves effort rather than adds ceremony.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>What platform and enablement should do</h3>
+            <p>Build self-service capability, reusable templates, delivery guardrails, and coaching. Time-box enabling work and avoid becoming a permanent dependency layer. Platform and enablement should remove toil, not move it into another queue.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>What to standardise</h3>
+            <p>Authentication patterns, CI and CD foundations, observability defaults, environment setup, service templates, dependency hygiene, and operational controls. Standardise the things where inconsistency creates avoidable risk or repeated reinvention.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>How adoption should work</h3>
+            <p>Measure adoption, onboarding time, and friction removed. The point is whether teams can deliver more safely with less local overhead. If teams bypass the paved road, treat that as feedback about fit, friction, or trust.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Operating policy</summary>
+            <div class="detailBody">
+              <p>The paved road should make common delivery tasks easier, faster, and safer. It should come with clear categories such as mandatory controls, recommended defaults, and optional accelerators. Teams should know where discretion exists and where it does not.</p>
+            </div>
+          </details>
+          <details>
+            <summary>What good platform and enablement work looks like</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Reusable templates that remove repetitive setup work.</li>
+                <li>Guardrails embedded in delivery flow rather than added as external checks.</li>
+                <li>Documentation that is close to the workflow it describes.</li>
+                <li>Measured improvement in onboarding time, provisioning, and deployment friction.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Questions teams should be able to answer</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>What is mandatory, recommended, and optional on the paved road.</li>
+                <li>How teams request improvements to the paved road.</li>
+                <li>When an exception is acceptable and who approves it.</li>
+                <li>How enablement work is measured beyond activity metrics.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="modernisation">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Legacy and debt</div>
+            <h2>Modernisation and Tech Debt</h2>
+          </div>
+          <div class="audience">
+            <span>Management</span>
+            <span>Architecture</span>
+            <span>Teams</span>
+          </div>
+          <p>Modernisation is continuous estate improvement, not a separate rewrite programme. The aim is to reduce delivery friction, operational risk, and strategic drag without destabilising the business.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>Default approach</h3>
+            <p>Modernise continuously in slices. Use seams, contracts, strangler patterns, and hotspot retirement. Avoid framing modernisation as a separate transformation line divorced from product delivery. The best modernisation work makes product delivery easier and safer while it is happening.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>Debt policy</h3>
+            <p>Treat tech debt as a portfolio, not as an emotional category. Distinguish between debt that slows delivery, debt that increases risk, debt that raises operational cost, and debt that blocks strategic movement. Debt becomes manageable when its consequences are visible and comparable.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Budget and prioritisation</h3>
+            <p>Improvement and debt repayment need explicit budget, clear trade-offs, and visible rationale. If they live only in aspiration, they will lose to short-term pressure every quarter. Debt work should be governed, not opportunistic or vague.</p>
+          </article>
+          <article class="sectionCard toneBerry">
+            <h3>What management should understand</h3>
+            <p>Visible modernisation progress rarely looks dramatic in one quarter. It usually looks like fewer hotspots, less delivery friction, safer runtime behaviour, supported versions, and gradual retirement of legacy choke points.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Debt classification</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li><strong>Flow debt:</strong> slows delivery or increases cycle time.</li>
+                <li><strong>Reliability debt:</strong> raises incident risk or recovery cost.</li>
+                <li><strong>Security and compliance debt:</strong> creates control gaps or support risk.</li>
+                <li><strong>Strategic debt:</strong> blocks movement into a new product, market, or capability.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Avoid</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Big-bang rewrites without progressive exit criteria.</li>
+                <li>Architecture programmes that cannot show a path to operational simplification.</li>
+                <li>Debt labels used to avoid prioritisation discipline.</li>
+                <li>Supported-version drift treated as background noise until it becomes urgent and expensive.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Working rules</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Use a simple debt classification and scoring approach so trade-offs are visible.</li>
+                <li>Make replacement versus containment criteria explicit before larger investments begin.</li>
+                <li>Use ADRs to capture consequential technical decisions and the trade-offs behind them.</li>
+                <li>Show management visible progress through reduced hotspots, lower risk, and easier change, not just through larger programmes.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="ai-in-engineering">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Guardrailed adoption</div>
+            <h2>AI in Engineering</h2>
+          </div>
+          <div class="audience">
+            <span>Teams</span>
+            <span>Security</span>
+            <span>Management</span>
+          </div>
+          <p>AI is part of the engineering toolchain, but it needs clear boundaries. The aim is practical adoption that improves throughput and learning without weakening security, reviewability, or quality.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>Where AI helps</h3>
+            <p>Use it to accelerate testing, refactoring, code review preparation, documentation, boilerplate reduction, and exploration. The goal is better throughput and lower toil, not novelty. AI should make the engineering system more capable, not less disciplined.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>Controls</h3>
+            <p>Secure inputs and outputs, human review for substantive change, traceability of generated work, and clear boundaries around sensitive data, credentials, and regulated content. Use controls that are easy to follow in practice.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Rollout model</h3>
+            <p>Start with controlled pilots, defined success measures, and clear reporting on where the tools help, where they create rework, and where they should not be used. Build experience and judgement before widening access or hardening expectations.</p>
+          </article>
+          <article class="sectionCard toneBerry">
+            <h3>Leadership stance</h3>
+            <p>I want teams to build real experience with agentic and assistive tooling, but inside a framework that preserves security, quality, reviewability, and auditability. Curiosity is good; unmanaged adoption is not.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Approved and prohibited usage categories</summary>
+            <div class="detailBody">
+              <h4>Good starting use cases</h4>
+              <ul class="list">
+                <li>Test generation, refactoring assistance, documentation drafting, exploratory analysis, and review preparation.</li>
+                <li>Constrained coding tasks where review and traceability are straightforward.</li>
+              </ul>
+              <h4>Higher-risk areas that need stricter control</h4>
+              <ul class="list">
+                <li>Changes in security-sensitive code, infrastructure, data handling, regulated domains, or incident response.</li>
+                <li>Anything that requires exposure of sensitive internal material to a third-party system without approved handling.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Operating controls</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Approved use cases and prohibited use cases.</li>
+                <li>Data handling rules for prompts, outputs, and stored artefacts.</li>
+                <li>Review expectations when AI contributes to production code or operational changes.</li>
+                <li>How pilot results are summarised for management and fed back into tooling choices.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Failure modes to avoid</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Unreviewed code generation into production paths.</li>
+                <li>Copying sensitive material into external tools.</li>
+                <li>Adoption by mandate before capability is built.</li>
+                <li>Measuring success by usage volume alone.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="governance">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Cadence and evidence</div>
+            <h2>Governance and Scorecard</h2>
+          </div>
+          <div class="audience">
+            <span>Management</span>
+            <span>Engineering leadership</span>
+          </div>
+          <p>Governance should be lightweight, specific, and useful. It should make trends visible, support trade-offs, and help the organisation decide when to continue, correct, stabilise, or stop.</p>
+        </div>
+        <div class="visualModel">
+          <div class="visualModelHeader">
+            <div>
+              <h3>Governance rhythm</h3>
+              <p>Each cadence exists to support a different decision horizon, not to generate another status meeting.</p>
+            </div>
+          </div>
+          <div class="modelGrid4">
+            <div class="modelCard toneTeal">
+              <h4>Weekly</h4>
+              <p>Inspect flow, blocked work, incident themes, and immediate risk.</p>
+            </div>
+            <div class="modelCard toneNavy">
+              <h4>Monthly</h4>
+              <p>Review scorecard movement, friction themes, and improvement focus.</p>
+            </div>
+            <div class="modelCard toneRust">
+              <h4>Quarterly</h4>
+              <p>Rebalance bets, stabilisation needs, and capability investment.</p>
+            </div>
+            <div class="modelCard toneOlive">
+              <h4>Outcome</h4>
+              <p>Continue, correct, stabilise, stop, or increase support.</p>
+            </div>
+          </div>
+          <div class="modelFoot">Inputs: scorecard trends, incident signals, delivery flow, operational pressure, and strategy movement. Outputs: explicit trade-offs and visible action.</div>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>Cadence</h3>
+            <p>Use a lightweight quarterly review to examine trends, constraints, trade-offs, and risks. Back it with smaller monthly and weekly loops focused on flow, reliability, and delivery health. Every cadence should support a decision.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>What the scorecard is for</h3>
+            <p>The scorecard should steer decisions, not create surveillance theatre. Keep it small, trend-based, and tied to action. Use a mix of leading and lagging signals, and make sure each measure has a clear owner and an obvious reason to exist.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Measures to keep</h3>
+            <p>Keep the scorecard intentionally small: outcomes and journey metrics, SLO and error budget, lead time and cycle tail, change failure rate and MTTR, security remediation, paved-road adoption, ownership coverage, and kaizen follow-through.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>How management should use it</h3>
+            <p>Ask what changed, why it changed, what action is being taken, and what support is needed. Do not turn the scorecard into a league table. A red signal should prompt action, resourcing, or reprioritisation.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Cadence and decision map</summary>
+            <div class="detailBody">
+              <h4>Weekly</h4>
+              <p>Inspect operational pressure, blocked work, WIP age, and immediate delivery risk. Decide what needs escalation, swarming, or de-scoping now.</p>
+              <h4>Monthly</h4>
+              <p>Inspect scorecard movement, recurring incident themes, platform friction, and whether the current mix of work still makes sense.</p>
+              <h4>Quarterly</h4>
+              <p>Review outcomes, reliability, flow, quality, modernisation, and capability trends. Decide what to continue, stop, accelerate, or stabilise.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Scorecard definitions</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Metric definitions, source systems, review owners, and expected trend direction.</li>
+                <li>What constitutes a red, amber, or green signal and what decision follows.</li>
+                <li>How scorecard conversations connect to prioritisation, staffing, and stabilisation choices.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Anti-gaming rules</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Do not optimise for a single metric at the expense of overall system health.</li>
+                <li>Review measures in combination: lower cycle time with rising change failure rate is not success.</li>
+                <li>Prefer trend conversations over target theatre where teams learn to explain a number without improving the system beneath it.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="first-90-days">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">Entry model</div>
+            <h2>First 90 Days</h2>
+          </div>
+          <div class="audience">
+            <span>Management</span>
+            <span>New teams</span>
+          </div>
+          <p>The first 90 days are about establishing reality, tightening the system, and proving value early without overreaching. The goal is to create a credible baseline, reduce obvious friction, and build trust through evidence.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneNavy">
+            <h3>0-30: Baseline and align</h3>
+            <p>Create a current-state view of flow, reliability, ownership, tooling, and debt. Agree the first version of "good" for service health, delivery standards, and scorecard signals.</p>
+          </article>
+          <article class="sectionCard toneTeal">
+            <h3>31-60: Stabilise and enable</h3>
+            <p>Make run work visible, improve incident handling, remove obvious friction, and introduce a few paved-road and safety-rail wins that reduce toil quickly.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>61-90: Embed and prove</h3>
+            <p>Run the first scorecard review, show movement on a few trend lines, publish the initial ways-of-working reference, and frame modernisation as thin-sliced and risk-controlled.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>Leadership intent</h3>
+            <p>Bound the scope, build a shared picture of reality, and prove that the leadership approach reduces risk and friction before trying to scale it broadly.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Core artefacts for the first 90 days</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Current-state audit summary and top constraints.</li>
+                <li>Ownership map for critical services and journeys.</li>
+                <li>Initial scorecard baseline with known gaps.</li>
+                <li>Roadmap v1 prioritised by risk, friction, and opportunity.</li>
+                <li>Initial operating standards for SLOs, DoD, and incident follow-through.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="docSection" id="steady-state">
+        <div class="sectionHeader">
+          <div>
+            <div class="eyebrow">What happens after month three</div>
+            <h2>Steady-State Operating Model</h2>
+          </div>
+          <div class="audience">
+            <span>Managers</span>
+            <span>Teams</span>
+            <span>Peers</span>
+          </div>
+          <p>After the first 90 days, the model has to hold in steady state. The aim here is a repeatable rhythm for running engineering without drifting back into hidden operational load, diffuse ownership, or reactive planning.</p>
+        </div>
+        <div class="sectionGrid">
+          <article class="sectionCard toneTeal">
+            <h3>Weekly rhythm</h3>
+            <p>Review flow, blocked work, incident themes, staffing pressure, and top risks. Keep it operational and decision-oriented rather than status-heavy. This is where short-term plan correction happens before problems compound.</p>
+          </article>
+          <article class="sectionCard toneNavy">
+            <h3>Monthly rhythm</h3>
+            <p>Check scorecard movement, review key bets, inspect platform friction, and decide which constraints or improvement themes need focused attention next. This is usually the best point for deciding whether a team needs help, relief, or a sharper change in emphasis.</p>
+          </article>
+          <article class="sectionCard toneRust">
+            <h3>Quarterly rhythm</h3>
+            <p>Run the deeper QBR-style review: what moved, what did not, what got riskier, what needs reallocation, and which bets should stop, continue, or change. This is where the leadership approach proves whether it is learning or just reporting.</p>
+          </article>
+          <article class="sectionCard toneOlive">
+            <h3>Leadership responsibility</h3>
+            <p>Keep the system honest. Protect focus, challenge drift, keep trade-offs explicit, and make sure improvement work survives the pressure of day-to-day delivery. The leadership job in steady state is to keep the organisation from slowly reintroducing the waste and ambiguity that the first 90 days removed.</p>
+          </article>
+        </div>
+        <div class="detailBlock">
+          <details>
+            <summary>Steady-state chapter structure</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Weekly forums and what decisions belong in them.</li>
+                <li>Monthly management and engineering review cadence.</li>
+                <li>Quarterly planning and scorecard review sequence.</li>
+                <li>How operational surprises feed back into plans and capacity.</li>
+                <li>How improvement initiatives are selected and closed.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>What should feel different in a healthy steady state</summary>
+            <div class="detailBody">
+              <ul class="list">
+                <li>Plans change for understood reasons rather than through surprise escalation.</li>
+                <li>Teams can explain their operating pressure in a way that management can act on.</li>
+                <li>Reliability, quality, and estate health stay in the conversation even when roadmap pressure rises.</li>
+                <li>Improvement work is visible, measured, and closed out rather than permanently parked.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="appendix appendixOnly" id="appendices">
+        <div class="appendixHeader">
+          <div>
+            <div class="eyebrow">Reference</div>
+            <h2>Appendices and Reference Material</h2>
+          </div>
+          <div class="audience">
+            <span>Reference</span>
+            <span>Templates</span>
+          </div>
+          <p>This layer holds the working reference material: definitions, templates, examples, and checklists that support the leadership approach in day-to-day use.</p>
+        </div>
+        <div class="appendixGrid">
+          <article class="appendixCard toneNavy">
+            <h3>Scorecard starter table</h3>
+            <table class="metricTable">
+              <thead>
+                <tr>
+                  <th>Signal</th>
+                  <th>Why it matters</th>
+                  <th>Owner and source</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Outcomes</strong></td>
+                  <td>Shows whether delivery is moving customer or business measures rather than just output.</td>
+                  <td>Product and engineering leadership. OKR and journey data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Reliability</strong></td>
+                  <td>Shows trust, stability, and when stabilise-first should be triggered.</td>
+                  <td>Service owners. SLO and incident data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Flow</strong></td>
+                  <td>Shows whether work is moving smoothly or getting trapped in queues and tail latency.</td>
+                  <td>Engineering managers. Delivery system data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Safety</strong></td>
+                  <td>Shows whether change is both fast and recoverable.</td>
+                  <td>Engineering leadership. Deployment and incident data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Paved road</strong></td>
+                  <td>Shows whether enablement work is actually reducing friction.</td>
+                  <td>Platform or enablement function. Adoption and onboarding data.</td>
+                </tr>
+                <tr>
+                  <td><strong>Ownership</strong></td>
+                  <td>Shows whether critical services can be operated and escalated cleanly.</td>
+                  <td>Engineering managers and service owners. Ownership maps and runbook coverage.</td>
+                </tr>
+                <tr>
+                  <td><strong>Kaizen</strong></td>
+                  <td>Shows whether improvement actions are being closed and toil is being reduced over time.</td>
+                  <td>Engineering leadership and teams. Retro actions and operational friction logs.</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+          <article class="appendixCard toneTeal">
+            <h3>Ownership checklist</h3>
+            <ul class="compactList">
+              <li>Named service owner and escalation route</li>
+              <li>On-call path and support model understood</li>
+              <li>Runbook status known</li>
+              <li>Operational dashboards and alerts in place</li>
+              <li>Dependency and data contract knowledge explicit</li>
+              <li>Lifecycle risk and support status visible</li>
+            </ul>
+          </article>
+          <article class="appendixCard toneRust">
+            <h3>Incident review prompts</h3>
+            <ul class="compactList">
+              <li>What conditions made this failure possible?</li>
+              <li>Where did detection, diagnosis, or recovery break down?</li>
+              <li>What system fix would prevent recurrence or reduce impact?</li>
+              <li>What trade-off or assumption needs revisiting?</li>
+            </ul>
+          </article>
+          <article class="appendixCard toneOlive">
+            <h3>Reference artefacts</h3>
+            <ul class="compactList">
+              <li>Quarterly review agenda</li>
+              <li>Roadmap and confidence template</li>
+              <li>Thin-slice planning example</li>
+              <li>Debt prioritisation worksheet</li>
+              <li>AI pilot review template</li>
+            </ul>
+          </article>
+          <article class="appendixCard toneBerry">
+            <h3>Reusable chapter template</h3>
+            <ul class="compactList">
+              <li>Why this matters</li>
+              <li>What good looks like</li>
+              <li>What I expect from teams</li>
+              <li>What I will do as leader</li>
+              <li>Cadence, artefacts, and decisions</li>
+              <li>Signals and failure modes</li>
+            </ul>
+          </article>
+          <article class="appendixCard toneNavy">
+            <h3>Quick-read versus full-reference guidance</h3>
+            <p class="visuallyMuted">Use the top summary and the first card row in each section for quick alignment with leadership or teams. Use the detail drawers and appendices when clarifying policy or turning this into working agreements.</p>
+          </article>
+        </div>
+      </section>
     </main>
   </div>
 
   <script>
-    // ============================================================
-    // Config: section dividers on/off (easy toggle)
-    // ============================================================
-    const SHOW_DIVIDERS = false;
+    const body = document.body;
+    const modeButtons = Array.from(document.querySelectorAll(".modeBtn"));
+    const allDetails = Array.from(document.querySelectorAll("details"));
+    const tocLinks = Array.from(document.querySelectorAll("#toc a"));
+    const sections = Array.from(document.querySelectorAll("main > section, main > header"));
 
-    const ALL_SLIDES = [
-      {
-        id: "leading-change",
-        title: "Leading Engineering through Change with Stability",
-        subtitle: "A Lean, measurable system of work that enables reliable delivery at pace — without adding ceremony",
-        badges: [
-          { label: "Trust + predictability", color: "var(--b)" },
-          { label: "Lean system of work", color: "var(--c)" },
-          { label: "Trade-off clarity", color: "var(--a)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "What this is (and how it works)",
-          items: [
-            { tone: "var(--b)", icon: iconTarget(), title: "Purpose & Outcomes", text: "A lightweight set of foundations and principles that guide delivery decisions and trade-offs to yield: Reliable delivery • Operational stability • Consistent engineering quality • Modernisation progress." },
-            { tone: "var(--a)", icon: iconStar(), title: "North Star (decision scaffolding)", text: "Durable commitments that guide decisions when priorities clash (outcomes, reliability, security, quality, ownership)." },
-            { tone: "var(--a)", icon: iconSettings(), title: "System of Work", text: "Lean mechanics: flow, pull/WIP, visibility, safety rails, paved road, go-see, kaizen. Explicit management of the STOP list to remove structural waste that leads to excessive delay, rework, risk and cost. How we organise and work day-to-day." },
-          ]
-        },
-        right: [
-          { type: "callout", title: "Why it matters", bullets: [
-            "More predictable delivery with fewer surprises",
-            "Lower operational risk through safe, measurable change",
-            "Reduced rework by eliminating waste and building quality in",
-            "Visible progress on modernising the estate"
-          ]},
-          { type: "kv", title: "Governance (lightweight)", rows: [
-            { k: "Cadence", v: "Quarterly review (QBR-style)" },
-            { k: "Evidence", v: "Balanced mini-scorecard, trend-based" },
-            { k: "Decision focus", v: "Trade-offs + constraints + risks" },
-            { k: "Outcome", v: "Correct course, not add ceremony" }
-          ]}
-        ],
-        foot: "Talking point: stability and transformation become compatible — not competing goals."
-      },
+    function setMode(mode) {
+      body.classList.toggle("summary-mode", mode === "summary");
+      body.classList.toggle("full-mode", mode === "full");
 
-      {
-        id: "northstar",
-        title: "Engineering North Star",
-        subtitle: "Trade-off setters — durable commitments that guide decisions",
-        badges: [
-          { label: "Direction", color: "var(--a)" },
-          { label: "Trust + safety", color: "var(--b)" },
-          { label: "Ownership", color: "var(--e)" },
-        ],
-        left: {
-          type: "cards",
-          headline: "The 7 principles that guide our decisions",
-          cards: [
-            { icon: iconTrend(), title: "Outcomes over Output", text: "Measure success by customer/business impact, not activity." },
-            { icon: iconActivity(), title: "Reliability is a Feature", text: "SLOs & error budgets guide stabilise-first decisions." },
-            { icon: iconLock(), title: "Secure by Design", text: "Shift-left security with automated controls and least privilege." },
-            { icon: iconCheck(), title: "Quality is Built In", text: "Prevent defects through strong DoD, testing and operability." },
-            { icon: iconLayers(), title: "Evolutionary Architecture", text: "Design for change; modernise continuously with seams & ADRs." },
-            { icon: iconUsers(), title: "Psychological Safety", text: "Blameless learning and sustainable pace enable performance." },
-            { icon: iconFlag(), title: "Clear Ownership & Accountability", text: "Named owners; teams empowered end-to-end (build & run)." },
-          ]
-        },
-        right: {
-          type: "callout",
-          title: "Quarterly signals (small set)",
-          bullets: [
-            "OKR progress & 1-2 journey metrics",
-            "SLO attainment & error budget burn",
-            "Change failure rate & MTTR",
-            "Lead time for changes",
-            "Vulnerability remediation SLA adherence",
-            "Paved road adoption",
-            "% services with named owner & runbook"
-          ]
-        },
-        foot: "Simple decision rule: out of error budget → stabilise before adding new change."
-      },
-
-      {
-        id: "lean-sow",
-        title: "Lean System of Work",
-        subtitle: "How we increase flow, reduce waste, and deliver safely",
-        badges: [
-          { label: "Flow", color: "var(--c)" },
-          { label: "Pull/WIP", color: "var(--f)" },
-          { label: "Safety rails", color: "var(--b)" },
-        ],
-        left: {
-          type: "cards",
-          headline: "How we work day-to-day",
-          cards: [
-            { icon: iconShuffle(), title: "Build for Flow", text: "Small batches, fewer handoffs, fast feedback loops." },
-            { icon: iconInbox(), title: "Pull, Not Push (WIP)", text: "Capacity-based intake; stop starting, start finishing." },
-            { icon: iconEye(), title: "Make Work Visible", text: "Expose queues/constraints; swarm bottlenecks." },
-            { icon: iconShield(), title: "Safety Rails by Default", text: "Automated tests + security controls + progressive delivery." },
-            { icon: iconRoad(), title: "The Paved Road", text: "Self-service golden paths: easiest way is safe/compliant." },
-            { icon: iconMapPin(), title: "Go See the Work", text: "Ground decisions in real journeys, ops signals, and data." },
-            { icon: iconRefresh(), title: "Kaizen", text: "Retros with follow-through; reduce toil; grow skills." },
-          ]
-        },
-        right: [
-        {
-          type: "callout",
-          tone: "danger",
-          variant: "tw-grid",
-          title: "TIMWOODS (anti-list we actively remove)",
-          items: [
-            { k: "T — Transportation", v: "Handoffs, ticket ping-pong, context loss between teams." },
-            { k: "I — Inventory", v: "Too much WIP; large queues of half-done work." },
-            { k: "M — Motion", v: "Tool friction, manual steps, context switching and toil." },
-            { k: "W — Waiting", v: "Queues for reviews, approvals, environments, dependencies." },
-            { k: "O — Overproduction", v: "Building too much or too early without validated demand." },
-            { k: "O — Overprocessing", v: "Heavy ceremony, gold-plating, duplicated docs/work." },
-            { k: "D — Defects", v: "Rework from bugs, regressions, incidents; failure demand." },
-            { k: "S — Skills", v: "Silos, bottlenecks, single points of failure; unused talent." }
-          ]
-        },  
-        {
-          type: "kv",
-          title: "What improves",
-          rows: [
-            { k: "Batch size", v: "Down" },
-            { k: "Queues & waiting", v: "Down" },
-            { k: "Rework & defects", v: "Down" },
-            { k: "Predictability", v: "Up" },
-            { k: "Time to learn", v: "Down" }
-          ]
-        }],
-        foot: ""
-      },
-
-      {
-        id: "divider-mini",
-        type: "divider",
-        title: "How I Would Operate",
-        subtitle: "Applying the foundations to team structure, flow, planning, resilience, quality, tools and modernisation.",
-        chips: [
-          { label: "Teams", color: "var(--a)" },
-          { label: "Run vs Change", color: "var(--c)" },
-          { label: "OKR Alignment", color: "var(--b)" },
-          { label: "Quality & Resilience", color: "var(--d)" },
-          { label: "Tools & Tech Debt", color: "var(--f)" },
-        ]
-      },
-
-      {
-        id: "teams",
-        title: "Organise Teams for Success",
-        subtitle: "Small number of durable teams, clear ownership, and low-friction collaboration",
-        badges: [
-          { label: "Team Topologies-inspired", color: "var(--a)" },
-          { label: "Low cognitive load", color: "var(--c)" },
-          { label: "Clear ownership", color: "var(--e)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "Structure & interaction model",
-          items: [
-            { tone: "var(--a)", icon: iconLayers(), title: "2-3 Stream-aligned teams", text: "Own outcomes end-to-end for key value streams (build & run), with clear service/domain boundaries." },
-            { tone: "var(--c)", icon: iconRoad(), title: "Enabling / micro-platform capability", text: "Paved road & automation & coaching. Build self-service, not a ticket queue. Time-boxed missions." },
-            { tone: "var(--b)", icon: iconShuffle(), title: "Explicit interaction modes", text: "X-as-a-Service by default; Collaboration only when needed (time-boxed); Facilitating for enablement." },
-            { tone: "var(--e)", icon: iconFlag(), title: "Ownership & decision rights", text: "Named owners for services; clear escalation paths; fewer handoffs and less ‘nobody owns this’ risk." }
-          ]
-        },
-        right: [
-          { type: "callout", title: "We do", bullets: [
-            "Create durable teams sized for flow (6-9 people)",
-            "Align ownership to business value streams and services",
-            "Reduce dependencies with clear boundaries and paved paths",
-            "Time-box collaboration; default to self-service"
-          ]},
-          { type: "callout", title: "We avoid", bullets: [
-            "Component teams that create handoffs by default",
-            "A platform team as a catch-all dependency or ticket queue",
-            "Unowned services and unclear escalation paths"
-          ]},
-          { type: "kv", title: "Signals", rows: [
-            { k: "Dependency waiting", v: "Trend down" },
-            { k: "% services with owner/runbook", v: "Trend up" },
-            { k: "Onboarding to first deploy", v: "Trend down" }
-          ]}
-        ],
-        foot: "Talking point: clearer ownership + fewer handoffs → faster delivery and lower operational risk."
-      },
-
-      {
-        id: "run-change",
-        title: "Run vs Change: Capacity, Focus, Predictability",
-        subtitle: "Make operational work visible and funded so reliability and delivery don't clash",
-        badges: [
-          { label: "Dynamic capacity allocation model", color: "var(--f)" },
-          { label: "WIP discipline", color: "var(--c)" },
-          { label: "Stability first when needed", color: "var(--b)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "Change / Respond / Improve",
-          items: [
-            { tone: "var(--b)", icon: iconTarget(), title: "CHANGE (70%)", text: "Outcome-driven delivery with measurable success criteria and small-batch releases." },
-            { tone: "var(--c)", icon: iconActivity(), title: "RUN (RESPONSE) (15%)", text: "Incidents, on-call, BAU, operational requests, compliance hygiene, reliability maintenance." },
-            { tone: "var(--a)", icon: iconRefresh(), title: "RUN (IMPROVE) (15%)", text: "Toil reduction, technical-debt, automation, quality/reliability improvements, enablement missions." },
-            { tone: "var(--d)", icon: iconShield(), title: "Control: reliability signals", text: "When stability risk increases (error budget burn / incident trend), shift capacity to stabilise-first." }
-          ]
-        },
-        right: [
-          { type: "callout", title: "We do", bullets: [
-            "Explicit WIP limits & dynanically adjusted capacity allocation",
-            "Make interrupts visible; reduce toil through automation",
-            "'Stabilise-first' approach agreed up-front in response to 'red' reliability signals",
-            "Protect focus: stop starting, start finishing"
-          ]},
-          { type: "callout", title: "We avoid", bullets: [
-            "100% utilisation and too many parallel initiatives",
-            "Invisible interrupts driving burnout and delays",
-            "Heroic firefighting as the operating model"
-          ]},
-          { type: "kv", title: "Signals", rows: [
-            { k: "Aging WIP / carryover", v: "Trend down" },
-            { k: "Toil / interrupt load", v: "Trend down" },
-            { k: "Incident recurrence", v: "Trend down" }
-          ]}
-        ],
-        foot: "Talking point: predictable delivery comes from controlling WIP and making operational demand explicit."
-      },
-
-      {
-        id: "planning",
-        title: "Planning & Estimation Aligned to Annual Objectives",
-        subtitle: "Clear line-of-sight: annual goals → quarterly outcomes → team slices → learn & adjust",
-        badges: [
-          { label: "OKR alignment", color: "var(--c)" },
-          { label: "Rolling forecast", color: "var(--b)" },
-          { label: "Evidence-driven", color: "var(--a)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "How planning works",
-          items: [
-            { tone: "var(--c)", icon: iconTarget(), title: "Annual objectives", text: "Company objectives set direction; we translate them into measurable outcomes and journeys." },
-            { tone: "var(--b)", icon: iconMapPin(), title: "Quarterly Business Review (OKRs)", text: "Define success measures; prioritise the bets that move those measures most." },
-            { tone: "var(--a)", icon: iconShuffle(), title: "Team slices & experiments", text: "Thin slices, early validation, staged rollouts; stop/pivot if not moving metrics." },
-            { tone: "var(--f)", icon: iconTrend(), title: "Estimation = decision support", text: "Use ranges & confidence to manage uncertainty, capacity and dependencies — not false precision." }
-          ]
-        },
-        right: [
-          { type: "callout", title: "We do", bullets: [
-            "Translate annual objectives into quarterly outcomes and measurable journeys",
-            "Plan thin slices; validate early; stop/pivot based on evidence",
-            "Use rolling forecasts and re-plan at QBR checkpoints",
-            "Estimate using ranges/confidence to manage risk"
-          ]},
-          { type: "callout", title: "We avoid", bullets: [
-            "Big scope commitments without discovery/validation",
-            "Using story points as a performance metric",
-            "Mistaking roadmap certainty for delivery predictability"
-          ]},
-          { type: "kv", title: "Signals", rows: [
-            { k: "OKR progress", v: "Trend up" },
-            { k: "Outcome predictability", v: "Trend up" },
-            { k: "Decision → value shipped", v: "Trend down" }
-          ]}
-        ],
-        foot: "Talking point: estimation helps manage uncertainty — outcomes tell us if we were right."
-      },
-
-      {
-        id: "excellence",
-        title: "Engineering Excellence: Resilience, Incidents, Quality",
-        subtitle: "Build reliability and quality in so speed is sustainable — not fragile",
-        badges: [
-          { label: "SLOs & error budgets", color: "var(--b)" },
-          { label: "Safe change", color: "var(--c)" },
-          { label: "Consistency", color: "var(--a)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "How we harden delivery",
-          items: [
-            { tone: "var(--b)", icon: iconActivity(), title: "Reliability controls", text: "Define SLOs for critical journeys; manage error budgets to trigger stabilise-first." },
-            { tone: "var(--c)", icon: iconEye(), title: "Operability by default", text: "Logs/metrics/traces, meaningful alerts, dashboards, runbooks — tied to real user journeys." },
-            { tone: "var(--a)", icon: iconCheck(), title: "Quality built-in", text: "DoD includes testing, observability, maintainability, and review standards." },
-            { tone: "var(--d)", icon: iconShield(), title: "Incident learning loop", text: "Blameless postmortems with action follow-through to prevent recurrence." }
-          ]
-        },
-        right: [
-          { type: "callout", title: "We do", bullets: [
-            "Use SLOs/error budgets to decide when to stabilise-first",
-            "Run blameless incident reviews focused on system fixes",
-            "Standardise CI/CD safety rails (tests, security, progressive delivery, rollback)",
-            "Raise consistency through templates, patterns and guardrails"
-          ]},
-          { type: "callout", title: "We avoid", bullets: [
-            "Manual gates as the primary control mechanism",
-            "Recurring incidents without systemic fixes",
-            "Treating quality as a late phase or a separate team"
-          ]},
-          { type: "kv", title: "Signals", rows: [
-            { k: "SLO attainment / error budget", v: "Improving" },
-            { k: "Change failure rate / MTTR", v: "Trend down" },
-            { k: "Escaped defects", v: "Trend down" }
-          ]}
-        ],
-        foot: "Talking point: safe, standardised delivery is how we go fast without breaking trust."
-      },
-
-      {
-        id: "tools-debt",
-        title: "Productivity & Modernisation: Tools (incl. AI) & Tech Debt",
-        subtitle: "Increase throughput and reduce legacy risk through managed modernisation and paved-road tooling",
-        badges: [
-          { label: "Paved road", color: "var(--c)" },
-          { label: "Modernise in slices", color: "var(--a)" },
-          { label: "AI with guardrails", color: "var(--f)" },
-        ],
-        left: {
-          type: "stack",
-          headline: "How we modernise and speed up",
-          items: [
-            { tone: "var(--c)", icon: iconRoad(), title: "Tooling as the paved road", text: "Golden paths, templates, CI/CD automation, environments, observability defaults — self-service adoption." },
-            { tone: "var(--a)", icon: iconLayers(), title: "Modernisation approach", text: "Strangler pattern; seams/contracts; replace in slices; retire hotspots; supported-version hygiene." },
-            { tone: "var(--b)", icon: iconTarget(), title: "Tech debt is budgeted", text: "Explicit capacity and prioritisation; ADRs for decisions; manage 'interest' and repay ‘principal’ deliberately." },
-            { tone: "var(--f)", icon: iconSpark(), title: "Agentic AI (guardrailed)", text: "Use for SDLC acceleration (tests, refactors, PR review, docs) with security, quality and audit controls. Run controlled experients with full agentic coding tools (Codex, Claude Code, etc) to build experience and confidence." }
-          ]
-        },
-        right: [
-          { type: "callout", title: "We do", bullets: [
-            "Introduce productivity tools via paved-road paths (adoption > mandates)",
-            "Modernise continuously with the strangler pattern and clear exit criteria",
-            "Maintain supported-version and dependency hygiene",
-            "Use agentic AI with guardrails: secure inputs/outputs, review gates, traceability. Build real experience before wider adoption."
-          ]},
-          { type: "callout", title: "We avoid", bullets: [
-            "Big-bang rewrites and destabilising programmes",
-            "Tool sprawl without measurable adoption or safety controls",
-            "AI use that bypasses security, quality, or auditability"
-          ]},
-          { type: "kv", title: "Signals", rows: [
-            { k: "Paved-road adoption", v: "Trend up" },
-            { k: "% estate supported", v: "Trend up" },
-            { k: "Cycle time ↓ without CFR ↑", v: "Improving" }
-          ]}
-        ],
-        foot: "Talking point: we modernise safely and measurably — and use AI to remove toil, not add risk."
-      },
-      {
-        id: "roadmap",
-        title: "Roadmap: Immersion, Early Wins, Scale What Works",
-        subtitle: "Q1 (0-90): baseline + tighten + pilot. Remainder of year: scale what works (multi-year transformation, no big-bang).",
-        badges: [
-          { label: "Evidence-driven", color: "var(--b)" },
-          { label: "Risk-controlled change", color: "var(--c)" },
-          { label: "Multi-year journey", color: "var(--a)" }
-        ],
-        left: {
-          type: "roadmap",
-          headline: "First 90 days (outcomes + deliverables)",
-          phases: [
-            {
-              tone: "var(--c)",
-              t: "0-30: Baseline & Align (audit-first)",
-              outcomes: [
-                "Current-state view of flow, reliability, quality, tooling, debt",
-                "Agreement on 'good': SLOs/DoD/paved road scope/OKR linkage",
-                "Clear ownership for critical services and journeys"
-              ],
-              deliverables: [
-                "Lightweight engineering system audit & top constraints",
-                "Top journeys identified & instrumentation plan",
-                "Ownership map (owners, on-call, runbooks status)",
-                "Scorecard baseline (with known gaps)",
-                "Roadmap v1 prioritised by constraints"
-              ]
-            },
-            {
-              tone: "var(--b)",
-              t: "31-60: Stabilise & Enable",
-              outcomes: [
-                "Stabilisation capacity explicit; incident response consistent",
-                "Reduced toil/friction; safer, smaller changes",
-                "Early paved-road adoption"
-              ],
-              deliverables: [
-                "SLOs & error budgets for 2-3 key journeys/services",
-                "Incident uplift: templates & action tracking",
-                "Paved road quick wins (templates/CI checks/self-service access)",
-                "WIP limits & visible bottleneck review",
-                "Remove top 2 wastes (TIMWOODS) with concrete changes"
-              ]
-            },
-            {
-              tone: "var(--a)",
-              t: "61-90: Embed & Demonstrate Early Wins (thin-slice)",
-              outcomes: [
-                "Cadence running: scorecard used for prioritisation and trade-offs",
-                "Early evidence on 2-3 trend lines (e.g., lead time tail, MTTR, CFR, toil)",
-                "Modernisation plan is thin-sliced and risk-controlled (not a big-bang programme)"
-              ],
-              deliverables: [
-                "First QBR-style review: trends → actions → re-prioritisation",
-                "DoD v1 & release/rollback guidance & quality baseline",
-                "Modernisation thin-slice plan: top 3 hotspots & seams",
-                "Tooling/AI pilots with guardrails & success measures",
-                "Publish ways-of-working one-pager for teams."
-              ]
-            }
-          ]
-        },
-        right: [
-          {
-            type: "callout",
-            title: "What this roadmap covers",
-            bullets: [
-              "Teams & ownership • Run/Change capacity • OKR-aligned planning",
-              "Resilience & incident management • Quality & consistency",
-              "Tools & enablement (incl. AI) • Tech debt & legacy modernisation"
-            ]
-          },
-          {
-            type: "callout",
-            title: "Remainder of year (scale what works)",
-            bullets: [
-              "Q2: Expand guardrails & reduce toil (SLO coverage, paved road adoption, fewer repeat incidents)",
-              "Q3: Modernise in slices (1-2 legacy retirement wins, supported-version uplift, debt governance)",
-              "Q4: Institutionalise & plan next year (sustained trends, capability uplift, OKR translation playbook)"
-            ]
-          },
-          {
-            type: "kv",
-            title: "Success looks like",
-            rows: [
-              { k: "Predictability", v: "Up (shorter tail lead times)" },
-              { k: "Stability", v: "Up (SLOs met, less recurrence)" },
-              { k: "Quality", v: "Up (lower CFR/defects)" },
-              { k: "Modernisation", v: "Visible wins, continuous" }
-            ]
-          }
-        ],
-        foot: "Deliberately bounded scope: validate/adopt what exists, implement only where gaps create risk or friction; prove impact on 2-3 journeys/services before scaling."
-      },
-      // ---------------- Appendix (always last) ----------------
-      {
-        id: "scorecard",
-        title: "Appendix: Mini Scorecard",
-        subtitle: "Quarterly, trend-based signals to steer delivery health (lightweight)",
-        badges: [
-          { label: "QBR cadence", color: "var(--c)" },
-          { label: "Trends not targets", color: "var(--b)" },
-          { label: "Leading + lagging", color: "var(--a)" },
-        ],
-        left: {
-          type: "cards",
-          headline: "What we review (and why)",
-          cards: [
-            { icon: iconTrend(), title: "Outcomes", text: "OKR progress & 1-2 key journey metrics (impact, not activity)." },
-            { icon: iconActivity(), title: "Reliability", text: "SLO attainment & error budget burn (trust and stability)." },
-            { icon: iconShuffle(), title: "Flow", text: "Lead time & cycle time distribution (incl. P95 tail latency) & deployment frequency." },
-            { icon: iconCheck(), title: "Quality & Safety", text: "Change failure rate & MTTR (fast, safe change & recovery)." },
-            { icon: iconLock(), title: "Security", text: "Vulnerability remediation SLA & pipeline coverage." },
-            { icon: iconRoad(), title: "Paved Road / DevEx", text: "Golden path adoption & onboarding/provisioning time." },
-            { icon: iconFlag(), title: "Ownership", text: "% services with owner & runbook; time-to-right-owner." },
-            { icon: iconRefresh(), title: "Kaizen", text: "Improvement action completion & toil trend." },
-          ]
-        },
-        right: {
-          type: "kv",
-          title: "Suggested scorecard (max 8)",
-          rows: [
-            { k: "Outcomes", v: "OKR & journey metric(s)" },
-            { k: "Reliability", v: "SLO & error budget" },
-            { k: "Flow", v: "Lead time & cycle tail & deployment frequency" },
-            { k: "Safety", v: "CFR & MTTR" },
-            { k: "Security", v: "Vuln SLA & CI coverage" },
-            { k: "Paved Road", v: "Adoption & onboarding time" },
-            { k: "Ownership", v: "% owned services/runbooks" },
-            { k: "Kaizen", v: "Actions & toil trend" }
-          ]
-        },
-        foot: "Appendix: keep signals small and consistent; discuss trends & actions."
-      }
-    ];
-
-    // Apply divider toggle
-    const slides = SHOW_DIVIDERS ? ALL_SLIDES : ALL_SLIDES.filter(s => s.type !== "divider");
-
-    // ------------------------- Elements -------------------------
-    const navEl = document.getElementById("nav");
-    const slideEl = document.getElementById("slide");
-    const progressChip = document.getElementById("progressChip");
-
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const hamburger = document.getElementById("hamburger");
-
-    const collapseBtn = document.getElementById("collapseBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    const presenterToggle = document.getElementById("presenterToggle");
-    const presenterState = document.getElementById("presenterState");
-
-    const COLLAPSE_KEY = "fullDeck.sidebarCollapsed";
-    const PRESENTER_KEY = "fullDeck.presenterMode";
-
-    // ------------------------- Sidebar collapse (desktop) -------------------------
-    function setCollapsed(collapsed){
-      const isMobile = window.matchMedia("(max-width: 900px)").matches;
-      if (isMobile) return;
-      if (document.body.classList.contains("presenter")) return;
-      document.body.classList.toggle("sidebar-collapsed", collapsed);
-      collapseBtn.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
-      collapseBtn.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
-      collapseBtn.innerHTML = collapsed
-        ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-             <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-           </svg>`
-        : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-             <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-           </svg>`;
-      localStorage.setItem(COLLAPSE_KEY, collapsed ? "1" : "0");
-    }
-    function toggleCollapsed(){ setCollapsed(!document.body.classList.contains("sidebar-collapsed")); }
-    collapseBtn.addEventListener("click", toggleCollapsed);
-
-    // ------------------------- Presenter mode -------------------------
-    function setPresenterMode(on){
-      document.body.classList.toggle("presenter", on);
-      presenterState.textContent = on ? "ON" : "OFF";
-      presenterState.style.color = on ? "var(--b)" : "var(--muted2)";
-      localStorage.setItem(PRESENTER_KEY, on ? "1" : "0");
-      if(on) document.body.classList.remove("sidebar-collapsed");
-      else {
-        const isMobile = window.matchMedia("(max-width: 900px)").matches;
-        if (!isMobile){
-          const saved = localStorage.getItem(COLLAPSE_KEY);
-          setCollapsed(saved === "1");
-        }
-      }
-    }
-    function togglePresenter(){ setPresenterMode(!document.body.classList.contains("presenter")); }
-    presenterToggle.addEventListener("click", togglePresenter);
-
-    (function initPresenter(){
-      const url = new URL(window.location.href);
-      if (url.searchParams.get("presenter") === "1") return setPresenterMode(true);
-      const saved = localStorage.getItem(PRESENTER_KEY);
-      setPresenterMode(saved === "1");
-    })();
-
-    (function restoreCollapsed(){
-      const isMobile = window.matchMedia("(max-width: 900px)").matches;
-      if (isMobile) return;
-      const saved = localStorage.getItem(COLLAPSE_KEY);
-      if (!document.body.classList.contains("presenter")) setCollapsed(saved === "1");
-    })();
-
-    window.addEventListener("resize", () => {
-      const isMobile = window.matchMedia("(max-width: 900px)").matches;
-      if (isMobile) document.body.classList.remove("sidebar-collapsed");
-      else if (!document.body.classList.contains("presenter")){
-        const saved = localStorage.getItem(COLLAPSE_KEY);
-        setCollapsed(saved === "1");
-      }
-    });
-
-    // ------------------------- Build nav -------------------------
-    function buildNav(){
-      navEl.innerHTML = "";
-      slides.forEach((s, idx) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.dataset.idx = idx;
-        btn.setAttribute("aria-current", "false");
-
-        const navTitle = s.type === "divider" ? `— ${s.title}` : s.title;
-        const navSub = s.type === "divider" ? "Section divider" : s.subtitle;
-
-        btn.innerHTML = `
-          <div class="k">${idx+1}</div>
-          <div class="t">
-            <div class="title">${escapeHtml(navTitle)}</div>
-            <div class="sub">${escapeHtml(navSub || "")}</div>
-          </div>
-        `;
-        btn.addEventListener("click", () => go(idx, {closeSidebar:true}));
-        navEl.appendChild(btn);
+      modeButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === mode);
       });
     }
 
-    // ------------------------- Rendering -------------------------
-    function renderBadges(badges){
-      if(!badges?.length) return "";
-      return `
-        <div class="badgeRow">
-          ${badges.map(b => `
-            <span class="badge">
-              <span class="dot" style="background:${b.color};"></span>
-              ${escapeHtml(b.label)}
-            </span>
-          `).join("")}
-        </div>
-      `;
-    }
-
-    function renderLeft(left){
-      if(!left) return "";
-
-      if(left.type === "stack"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">Model</span>
-            </div>
-            <div style="display:grid; gap:10px;">
-              ${left.items.map((it) => `
-                <div class="stackCard" style="border-color: color-mix(in srgb, ${it.tone} 35%, var(--stroke));">
-                  <div class="icon" style="background: color-mix(in srgb, ${it.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${it.tone} 30%, var(--stroke));" aria-hidden="true">
-                    ${it.icon}
-                  </div>
-                  <div>
-                    <h4>${escapeHtml(it.title)}</h4>
-                    <p>${escapeHtml(it.text)}</p>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if(left.type === "cards"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">Cards</span>
-            </div>
-            <div class="cards">
-              ${left.cards.map(c => `
-                <div class="card">
-                  <div class="icon" aria-hidden="true">${c.icon}</div>
-                  <div>
-                    <h4>${escapeHtml(c.title)}</h4>
-                    <p>${escapeHtml(c.text)}</p>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if(left.type === "diagram"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">Model</span>
-            </div>
-            <div style="display:grid; gap:10px;">
-              ${left.layers.map((l, i) => `
-                <div class="layerBox" style="border-color: color-mix(in srgb, ${l.tone} 35%, var(--stroke));">
-                  <div class="icon" style="background: color-mix(in srgb, ${l.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${l.tone} 30%, var(--stroke));" aria-hidden="true">
-                    ${i===0?iconStar():i===1?iconSettings():iconBan()}
-                  </div>
-                  <div>
-                    <div class="name">${escapeHtml(l.name)}</div>
-                    <div class="desc">${escapeHtml(l.desc)}</div>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if(left.type === "grid"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">TIMWOODS</span>
-            </div>
-            <div class="grid2">
-              ${left.items.map(it => `
-                <div class="gridItem">
-                  <div class="icon" aria-hidden="true">${it.icon}</div>
-                  <div>
-                    <div class="k">${escapeHtml(it.k)}</div>
-                    <div class="v">${escapeHtml(it.v)}</div>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if(left.type === "timeline"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">90 days</span>
-            </div>
-            <div style="display:grid; gap:10px;">
-              ${left.steps.map((st, i) => `
-                <div class="stackCard" style="border-color: color-mix(in srgb, ${st.tone} 35%, var(--stroke));">
-                  <div class="icon" style="background: color-mix(in srgb, ${st.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${st.tone} 30%, var(--stroke));" aria-hidden="true">
-                    ${i===0?iconClipboard():i===1?iconTool():iconRepeat()}
-                  </div>
-                  <div>
-                    <h4>${escapeHtml(st.t)}</h4>
-                    <p>${escapeHtml(st.d)}</p>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if (left.type === "roadmap"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(left.headline||"")}</strong>
-              <span class="chip">Roadmap</span>
-            </div>
-
-            <div style="display:grid; gap:10px;">
-              ${left.phases.map((ph) => `
-                <div class="stackCard" style="border-color: color-mix(in srgb, ${ph.tone} 35%, var(--stroke));">
-                  <div class="icon" style="background: color-mix(in srgb, ${ph.tone} 18%, rgba(255,255,255,.06)); border-color: color-mix(in srgb, ${ph.tone} 30%, var(--stroke));" aria-hidden="true">
-                    ${iconClipboard()}
-                  </div>
-                  <div style="width:100%">
-                    <h4>${escapeHtml(ph.t)}</h4>
-
-                    <p style="margin-top:6px">
-                      <b>Outcomes:</b> ${escapeHtml(ph.outcomes.join(" • "))}
-                    </p>
-
-                    <p style="margin-top:6px">
-                      <b>Deliverables:</b> ${escapeHtml(ph.deliverables.join(" • "))}
-                    </p>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      return "";
-    }
-
-    function renderRightBlock(right){
-      if(!right) return "";
-
-      if(right.type === "kv"){
-        return `
-          <div class="panel">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-              <strong style="font-size:13px; color:var(--text)">${escapeHtml(right.title || "Signals")}</strong>
-              <span class="chip">Signals</span>
-            </div>
-            <div class="kv">
-              ${right.rows.map(r => `
-                <div class="row">
-                  <span class="k">${escapeHtml(r.k)}</span>
-                  <span class="v">${escapeHtml(r.v)}</span>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }
-      
-      if (right.type === "callout") {
-        const toneClass = right.tone ? ` ${right.tone}` : "";
-
-        // TIMWOODS grid variant
-        if (right.variant === "tw-grid") {
-          const items = (right.items || []).map(it => {
-            const parts = String(it.k || "").split("—");
-            const abbr = (parts[0] || "").trim();              // e.g. "T"
-            const label = (parts[1] || it.k || "").trim();     // e.g. "Transportation"
-              return `
-                <div class="twItem">
-                  <div class="twHead">
-                    <span class="twBadge">${escapeHtml(abbr)}</span>
-                    <div class="twK">${escapeHtml(label)}</div>
-                  </div>
-                  <div class="twV">${escapeHtml(it.v)}</div>
-                </div>
-              `;
-          }).join("");
-
-          return `
-            <div class="callout${toneClass}">
-              <h3>${escapeHtml(right.title || "")}</h3>
-              <div class="twGrid">${items}</div>
-            </div>
-          `;
-        }
-        // Chips variant
-        if (right.variant === "chips") {
-          const rows = (right.chipRows || []).map(r => `
-            <div class="calloutChipRow">
-              <div class="calloutChipLabel">${escapeHtml(r.label)}:</div>
-              <div class="calloutChipWrap">
-                ${(r.chips || []).map(ch => `<span class="calloutChip">${escapeHtml(ch)}</span>`).join("")}
-              </div>
-            </div>
-          `).join("");
-
-          return `
-            <div class="callout${toneClass}">
-              <h3>${escapeHtml(right.title || "")}</h3>
-              <div class="calloutChips">${rows}</div>
-            </div>
-          `;
-        }
-
-        // Default bullets variant
-        return `
-          <div class="callout${toneClass}">
-            <h3>${escapeHtml(right.title || "We do")}</h3>
-            <ul class="list">
-              ${(right.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join("")}
-            </ul>
-          </div>
-        `;
-      }
-      return "";
-    }
-
-    function renderRight(right){
-      if(!right) return "";
-      const blocks = Array.isArray(right) ? right : [right];
-      return `<div class="rightStack">${blocks.map(renderRightBlock).join("")}</div>`;
-    }
-
-    function renderDivider(s){
-      const chips = (s.chips || []).map(ch => `
-        <span class="dividerChip"><span class="dot" style="background:${ch.color};"></span>${escapeHtml(ch.label)}</span>
-      `).join("");
-
-      slideEl.classList.add("divider");
-
-      slideEl.innerHTML = `
-        <div class="dividerInner">
-          <h2 class="dividerTitle">${escapeHtml(s.title)}</h2>
-          <p class="dividerSub">${escapeHtml(s.subtitle || "")}</p>
-          <div class="dividerChips">${chips}</div>
-        </div>
-      `;
-    }
-
-    function render(idx){
-      const s = slides[idx];
-      progressChip.textContent = `${idx+1} / ${slides.length}`;
-      Array.from(navEl.querySelectorAll("button")).forEach((b, i) => b.setAttribute("aria-current", i === idx ? "true" : "false"));
-
-      prevBtn.disabled = idx === 0;
-      nextBtn.disabled = idx === slides.length - 1;
-      prevBtn.style.opacity = prevBtn.disabled ? .6 : 1;
-      nextBtn.style.opacity = nextBtn.disabled ? .6 : 1;
-
-      // Divider
-      slideEl.classList.remove("divider");
-      if (s.type === "divider") return renderDivider(s);
-
-      slideEl.innerHTML = `
-        <div class="header">
-          <div class="titles">
-            <h2>${escapeHtml(s.title)}</h2>
-            <p>${escapeHtml(s.subtitle)}</p>
-          </div>
-          ${renderBadges(s.badges)}
-        </div>
-
-        <div class="content">
-          ${renderLeft(s.left)}
-          ${renderRight(s.right)}
-        </div>
-
-        <div class="footerNote">
-          <span>${escapeHtml(s.foot || "")}</span>
-          <span class="chip">#${escapeHtml(s.id)}</span>
-        </div>
-      `;
-    }
-
-    // ------------------------- Navigation -------------------------
-    function currentIndexFromHash(){
-      const h = (location.hash || "").replace("#", "");
-      if(!h) return 0;
-      const i = slides.findIndex(s => s.id === h);
-      return i >= 0 ? i : 0;
-    }
-
-    function go(idx, opts = {}){
-      const safe = Math.max(0, Math.min(slides.length - 1, idx));
-      const id = slides[safe].id;
-      if(location.hash.replace("#","") !== id) history.replaceState(null, "", "#" + id);
-      render(safe);
-      if(opts.closeSidebar) closeSidebar();
-      document.querySelector(".main")?.scrollTo?.({ top: 0, behavior: "smooth" });
-    }
-
-    function next(){ go(currentIndexFromHash() + 1); }
-    function prev(){ go(currentIndexFromHash() - 1); }
-
-    prevBtn.addEventListener("click", prev);
-    nextBtn.addEventListener("click", next);
-    window.addEventListener("hashchange", () => go(currentIndexFromHash()));
-
-    window.addEventListener("keydown", (e) => {
-      const tag = (document.activeElement?.tagName || "").toLowerCase();
-      if(tag === "input" || tag === "textarea") return;
-
-      if(e.key === "ArrowRight" || e.key.toLowerCase() === "j") next();
-      if(e.key === "ArrowLeft" || e.key.toLowerCase() === "k") prev();
-
-      if(e.key.toLowerCase() === "p") togglePresenter();
-
-      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b"){
-        e.preventDefault();
-        toggleCollapsed();
-      }
-
-      if(e.key === "Escape") closeSidebar();
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => setMode(button.dataset.mode));
     });
 
-    // Mobile drawer
-    function openSidebar(){
-      sidebar.classList.add("open");
-      overlay.classList.add("show");
-      overlay.setAttribute("aria-hidden", "false");
-    }
-    function closeSidebar(){
-      sidebar.classList.remove("open");
-      overlay.classList.remove("show");
-      overlay.setAttribute("aria-hidden", "true");
-    }
-    hamburger?.addEventListener("click", openSidebar);
-    overlay?.addEventListener("click", closeSidebar);
+    document.getElementById("expandAll").addEventListener("click", () => {
+      allDetails.forEach((detail) => {
+        detail.open = true;
+      });
+      setMode("full");
+    });
 
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+    document.getElementById("collapseAll").addEventListener("click", () => {
+      allDetails.forEach((detail) => {
+        detail.open = false;
+      });
+    });
 
-    // ------------------------- Icons -------------------------
-    function iconBase(path){
-      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">${path}</svg>`;
-    }
-    function iconTarget(){ return iconBase(`<path d="M12 3v3m0 12v3M3 12h3m12 0h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" stroke-width="1.8"/>`); }
-    function iconTrend(){ return iconBase(`<path d="M4 16l6-6 4 4 6-6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 8V4h-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconActivity(){ return iconBase(`<path d="M4 13h3l2-6 4 12 2-6h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconShield(){ return iconBase(`<path d="M12 3l7 4v6c0 5-3 8-7 9-4-1-7-4-7-9V7l7-4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconCheck(){ return iconBase(`<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconLock(){ return iconBase(`<path d="M7 11V8a5 5 0 0110 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 11h10v10H7V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconLayers(){ return iconBase(`<path d="M12 2l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17l9 5 9-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconUsers(){ return iconBase(`<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 11a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="1.8"/><path d="M22 21v-2a4 4 0 00-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconFlag(){ return iconBase(`<path d="M6 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6 4h12l-2 4 2 4H6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconShuffle(){ return iconBase(`<path d="M16 3h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 20l6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 3l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16 21h5v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M10 14l6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconInbox(){ return iconBase(`<path d="M4 4h16v12H4V4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 12h4l2 3h4l2-3h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 20v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconEye(){ return iconBase(`<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/>`); }
-    function iconRoad(){ return iconBase(`<path d="M8 22l2-20h4l2 20" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6v4m0 4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconMapPin(){ return iconBase(`<path d="M12 21s7-4.35 7-11a7 7 0 10-14 0c0 6.65 7 11 7 11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.8"/>`); }
-    function iconRefresh(){ return iconBase(`<path d="M21 12a9 9 0 10-3.2 6.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M21 12v-6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconRepeat(){ return iconBase(`<path d="M17 1l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V9a4 4 0 014-4h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 23l-4-4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconTool(){ return iconBase(`<path d="M14.7 6.3a4 4 0 01-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 005.6-5.6l-3 3-2-2 3-3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>`); }
-    function iconClock(){ return iconBase(`<path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`); }
-    function iconBox(){ return iconBase(`<path d="M21 8l-9-5-9 5 9 5 9-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 8v8l9 5 9-5V8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconScissors(){ return iconBase(`<path d="M4 8l16 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 16l16-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6.5 6.5a2.5 2.5 0 11-3.5 3.5 2.5 2.5 0 013.5-3.5z" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 14a2.5 2.5 0 11-3.5 3.5A2.5 2.5 0 016.5 14z" stroke="currentColor" stroke-width="1.8"/>`); }
-    function iconBug(){ return iconBase(`<path d="M9 9h6v6H9V9z" stroke="currentColor" stroke-width="1.8"/><path d="M9 5l-2-2M15 5l2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 13h5M15 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 20l2-2M17 20l-2-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 9V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconGraduation(){ return iconBase(`<path d="M12 3l10 5-10 5L2 8l10-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 10v6c0 2 3 4 6 4s6-2 6-4v-6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconStar(){ return iconBase(`<path d="M12 2l2.6 6.5L21 9l-5 4.2L17 20l-5-3-5 3 1-6.8L3 9l6.4-.5L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`); }
-    function iconSettings(){ return iconBase(`<path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a7.8 7.8 0 00.1-2l2-1.5-2-3.5-2.4.7a7.7 7.7 0 00-1.7-1l-.3-2.5H11l-.3 2.5a7.7 7.7 0 00-1.7 1L6.6 8l-2 3.5 2 1.5a7.8 7.8 0 00.1 2l-2 1.5 2 3.5 2.4-.7a7.7 7.7 0 001.7 1l.3 2.5h4l.3-2.5a7.7 7.7 0 001.7-1l2.4.7 2-3.5-2-1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>`); }
-    function iconBan(){ return iconBase(`<path d="M12 22a10 10 0 100-20 10 10 0 000 20z" stroke="currentColor" stroke-width="1.8"/><path d="M7 7l10 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`); }
-    function iconClipboard(){ return iconBase(`<path d="M9 4h6v3H9V4z" stroke="currentColor" stroke-width="1.8"/><path d="M7 7h10v14H7V7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>`); }
-    function iconSpark(){ return iconBase(`<path d="M12 2l1.7 6.2L20 10l-6.3 1.8L12 18l-1.7-6.2L4 10l6.3-1.8L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`); }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
 
-    // ------------------------- Init -------------------------
-    buildNav();
-    go(currentIndexFromHash());
+          const id = entry.target.id;
+          tocLinks.forEach((link) => {
+            link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+          });
+        });
+      },
+      {
+        rootMargin: "-25% 0px -55% 0px",
+        threshold: 0.1
+      }
+    );
 
-    // ------------------------- Navigation helpers -------------------------
-    function currentIndexFromHash(){
-      const h = (location.hash || "").replace("#", "");
-      if(!h) return 0;
-      const i = slides.findIndex(s => s.id === h);
-      return i >= 0 ? i : 0;
-    }
-
-    function go(idx, opts = {}){
-      const safe = Math.max(0, Math.min(slides.length - 1, idx));
-      const id = slides[safe].id;
-      if(location.hash.replace("#","") !== id) history.replaceState(null, "", "#" + id);
-      render(safe);
-      if(opts.closeSidebar) closeSidebar();
-      document.querySelector(".main")?.scrollTo?.({ top: 0, behavior: "smooth" });
-    }
-
-    function next(){ go(currentIndexFromHash() + 1); }
-    function prev(){ go(currentIndexFromHash() - 1); }
-
-    function togglePresenter(){ setPresenterMode(!document.body.classList.contains("presenter")); }
-
-    // Start in presenter mode: ?presenter=1
-    (function initPresenter(){
-      const url = new URL(window.location.href);
-      if (url.searchParams.get("presenter") === "1") setPresenterMode(true);
-    })();
-
-    // Update progress immediately
-    progressChip.textContent = `1 / ${slides.length}`;
+    sections.forEach((section) => {
+      if (section.id) {
+        observer.observe(section);
+      }
+    });
   </script>
 </body>
 </html>
