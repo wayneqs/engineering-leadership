@@ -1222,7 +1222,7 @@
           </article>
           <article class="sectionCard toneTeal">
             <h3>How they guide decisions</h3>
-            <p>Each principle should improve a real trade-off. It should tell us what to protect, what to question, and what evidence matters when priorities collide. If it never changes a release, backlog, or stabilisation call, it is not yet doing useful work.</p>
+            <p>Each principle should improve a real trade-off. It should tell us what to protect, what to question, and what evidence matters when priorities collide, whether that evidence is journey metrics, error budget, CFR and MTTR, or ownership signals such as coverage and time to right owner. If it never changes a release, backlog, or stabilisation call, it is not yet doing useful work.</p>
           </article>
           <article class="sectionCard toneRust">
             <h3>Expectations for teams</h3>
@@ -1237,14 +1237,15 @@
           <details>
             <summary>North Star as explicit operating rules</summary>
             <div class="detailBody">
+              <p>These are not abstract values. Each rule should have visible evidence behind it in reviews and day-to-day decisions.</p>
               <ul class="list">
-                <li><strong>Outcomes over output:</strong> Roadmaps and reviews should discuss movement in customer or business measures, not just completed activity.</li>
-                <li><strong>Reliability is a feature:</strong> Reliability work is product work when trust is at risk.</li>
-                <li><strong>Secure by design:</strong> Security controls should be embedded in delivery flow rather than bolted on at release time.</li>
-                <li><strong>Quality is built in:</strong> A team is not done when coding is done; it is done when the change is safe to operate and support.</li>
-                <li><strong>Evolutionary architecture:</strong> We prefer decisions that preserve optionality and reduce future change cost.</li>
-                <li><strong>Psychological safety:</strong> People must be able to surface risk, uncertainty, and failure without fear of blame.</li>
-                <li><strong>Clear ownership and accountability:</strong> Every critical area should have a team that can decide, act, and be found quickly.</li>
+                <li><strong>Outcomes over output:</strong> Roadmaps and reviews should discuss movement in customer or business measures, not just completed activity. The evidence is movement in journey and outcome metrics rather than activity counts alone.</li>
+                <li><strong>Reliability is a feature:</strong> Reliability work is product work when trust is at risk. The evidence is error budget posture, incident load, and whether reliability concerns visibly change priorities.</li>
+                <li><strong>Secure by design:</strong> Security controls should be embedded in delivery flow rather than bolted on at release time. The evidence is remediation age, secure defaults, and whether material risks are surfaced early enough to change decisions.</li>
+                <li><strong>Quality is built in:</strong> A team is not done when coding is done; it is done when the change is safe to operate and support. The evidence is change failure rate, rework, support demand, and MTTR when things do go wrong.</li>
+                <li><strong>Evolutionary architecture:</strong> We prefer decisions that preserve optionality and reduce future change cost. The evidence is lower dependency drag, simpler change paths, and fewer repeated architectural bottlenecks.</li>
+                <li><strong>Psychological safety:</strong> People must be able to surface risk, uncertainty, and failure without fear of blame. The evidence is whether risks are raised early, incident learning is candid, and teams challenge unsafe plans before release.</li>
+                <li><strong>Clear ownership and accountability:</strong> Every critical area should have a team that can decide, act, and be found quickly. The evidence is ownership coverage and short time to right owner during incidents, support issues, and dependency decisions.</li>
               </ul>
             </div>
           </details>
